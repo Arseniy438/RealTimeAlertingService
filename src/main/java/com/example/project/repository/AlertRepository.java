@@ -3,7 +3,6 @@ package com.example.project.repository;
 import com.example.project.model.alerts.Alert;
 import com.example.project.model.alerts.AlertStatus;
 import com.example.project.model.rules.AlertRule;
-//import jakarta.persistence.EntityNotFoundException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +23,7 @@ public class AlertRepository implements IAlertRepository {
     }
 
     @Override
-    public void updateAlert(Alert alert){
+    public void updateAlert(Alert alert) {
         alertMap.put(alert.getId(), alert);
     }
 
@@ -40,7 +39,7 @@ public class AlertRepository implements IAlertRepository {
         }
     }
 
-    public List<Alert> getAllAlert(){
+    public List<Alert> getAllAlert() {
         return alertMap.values().stream().toList();
     }
 

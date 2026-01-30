@@ -7,9 +7,9 @@ import java.util.Optional;
 public class Event {
 
     private Long id;
-    private EventType type;
-    private LocalDateTime timestamp;
-    private Map<EventField, Object> data;
+    private final EventType type;
+    private final LocalDateTime timestamp;
+    private final Map<EventField, Object> data;
 
     public Event(EventType type, LocalDateTime timestamp, Map<EventField, Object> data) {
         this.type = type;
@@ -35,11 +35,6 @@ public class Event {
             }
         }
 
-    }
-
-
-    public boolean hasKey(String key) {
-        return data.containsKey(key);
     }
 
     public Long getId() {

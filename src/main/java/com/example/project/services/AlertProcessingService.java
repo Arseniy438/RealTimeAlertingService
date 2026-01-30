@@ -2,12 +2,11 @@ package com.example.project.services;
 
 import com.example.project.model.alerts.Alert;
 import com.example.project.model.events.Event;
-import com.example.project.model.events.EventType;
 import com.example.project.model.rules.AlertRule;
 import com.example.project.repository.IAlertRepository;
 
 import java.time.Clock;
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class AlertProcessingService {
@@ -22,10 +21,11 @@ public class AlertProcessingService {
         this.clock = clock;
     }
 
-
     public void process(Event event) {
         for (AlertRule rule : alertRuleService.findMatching(event)) {
-            if (!rule.shouldFire(event, clock)) {continue;}
+            if (!rule.shouldFire(event, LocalDateTime.now(clock))) {
+                continue;
+            }
 
             Optional<Alert> active = alertRepository.findActiveByRule(rule);
 
@@ -38,19 +38,15 @@ public class AlertProcessingService {
     }
 
     private void createNewAlert(AlertRule rule, Event event) {
-        Alert alert = Alert.create(rule, event, clock);
+        Alert alert = Alert.create(rule, event, LocalDateTime.now(clock));
         alertRepository.saveAlert(alert);
     }
 
     private void handleActiveAlert(Alert alert, AlertRule rule) {
-        if(rule.isInCooldown(alert.getUpdatedAt(), clock)) return;
-        if (!alert.canRetry()) return;
+        if (rule.isInCooldown(alert.getUpdatedAt(), LocalDateTime.now(clock))) return;
 
-        alert.incrementRetry();
+        alert.retry(LocalDateTime.now(clock));
         alertRepository.updateAlert(alert);
     }
 
-//    public Optional<Alert> getAlert(AlertRule rule){
-//        return alertRepository.findActiveByRule(rule);
-//    }
 }

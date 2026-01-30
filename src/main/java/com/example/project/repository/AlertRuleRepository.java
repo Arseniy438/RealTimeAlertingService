@@ -2,7 +2,6 @@ package com.example.project.repository;
 
 import com.example.project.model.events.Event;
 import com.example.project.model.rules.AlertRule;
-//import jakarta.persistence.EntityNotFoundException;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
@@ -25,10 +24,10 @@ public class AlertRuleRepository implements IAlertRuleRepository {
         return Optional.ofNullable(ruleMap.get(id));
     }
 
-    public List<AlertRule> findRuleByEvent(Event event){
+    public List<AlertRule> findRuleByEvent(Event event) {
         List<AlertRule> list = new LinkedList<>();
         for (AlertRule alertRule : ruleMap.values()) {
-            if(alertRule.matchesEventType(event)){
+            if (alertRule.isMatchesEventType(event)) {
                 list.add(alertRule);
             }
         }
@@ -37,11 +36,8 @@ public class AlertRuleRepository implements IAlertRuleRepository {
 
     @Override
     public void deleteAlertRule(Long id) {
-        if(ruleMap.containsKey(id)){
+        if (ruleMap.containsKey(id)) {
             ruleMap.remove(id);
         }
-//        else{
-//            throw new EntityNotFoundException();
-//        }
     }
 }

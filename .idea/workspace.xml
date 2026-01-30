@@ -4,37 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2ef71938-c058-4139-b0d6-146297630ae0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/amplicode-jpa.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/project/RealTimeAlertingServiceApplication.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/project/infrastructure/EventMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/project/infrastructure/RawData.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/project/model/alerts/Alert.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/project/model/alerts/AlertStatus.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/project/model/events/Event.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/project/model/events/EventField.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/project/model/events/EventType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/project/model/rules/AlertRule.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/project/model/rules/Severity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/project/model/rules/conditions/Condition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/project/model/rules/conditions/GreaterThanCondition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/project/model/rules/conditions/LessThanCondition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/project/repository/AlertRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/project/repository/AlertRuleRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/project/repository/EventRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/project/repository/IAlertRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/project/repository/IAlertRuleRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/project/repository/IEventRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/project/services/AlertProcessingService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/project/services/AlertRuleService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/example/RealTimeAlertingService/RealTimeAlertingServiceApplicationTests.java" afterDir="false" />
+    <list default="true" id="2ef71938-c058-4139-b0d6-146297630ae0" name="Changes" comment="&#10;chore: initial project structure">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project/RealTimeAlertingServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project/RealTimeAlertingServiceApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project/model/alerts/Alert.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project/model/alerts/Alert.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project/model/events/Event.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project/model/events/Event.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project/model/rules/AlertRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project/model/rules/AlertRule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project/repository/AlertRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project/repository/AlertRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project/repository/AlertRuleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project/repository/AlertRuleRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project/repository/EventRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project/repository/EventRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project/repository/IAlertRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project/repository/IAlertRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project/repository/IEventRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project/repository/IEventRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project/services/AlertProcessingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project/services/AlertProcessingService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project/services/AlertRuleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project/services/AlertRuleService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/example/RealTimeAlertingService/RealTimeAlertingServiceApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/example/RealTimeAlertingService/RealTimeAlertingServiceApplicationTests.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,7 +36,22 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "Arseniy438"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/Arseniy438/RealTimeAlertingService.git",
+    "accountId": "d4a2dbbf-5233-40cd-871c-4f73384d3ca2"
+  }
+}]]></component>
   <component name="GradleModuleStateConfig" initialized="true" />
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5
 }</component>
@@ -67,8 +65,13 @@
   "keyToString": {
     "JUnit.RealTimeAlertingServiceApplicationTests.executor": "Run",
     "JUnit.RealTimeAlertingServiceApplicationTests.shouldBehaveSafely.executor": "Run",
+    "JUnit.RealTimeAlertingServiceApplicationTests.shouldCreateAlertAndRetry.executor": "Run",
     "JUnit.RealTimeAlertingServiceApplicationTests.shouldCreateOneAlertWhenManyRules.executor": "Run",
+    "JUnit.RealTimeAlertingServiceApplicationTests.shouldNotCreateAlertWhenAlertInCooldown.executor": "Run",
+    "JUnit.RealTimeAlertingServiceApplicationTests.shouldNotCreateAlertWhenEventNotInComparisonWindow.executor": "Run",
     "JUnit.RealTimeAlertingServiceApplicationTests.shouldNotCreateAlertWhenEventTypeNotEquals.executor": "Run",
+    "JUnit.RealTimeAlertingServiceApplicationTests.shouldNotCreateAlertWhenRuleDisabled.executor": "Run",
+    "JUnit.RealTimeAlertingServiceApplicationTests.shouldNotCreateAlertWithSameRule.executor": "Debug",
     "JUnit.RealTimeAlertingServiceApplicationTests.testCreateAlert.executor": "Run",
     "JUnit.RealTimeAlertingServiceApplicationTests.testExceptionsThrow.executor": "Run",
     "JUnit.RealTimeAlertingServiceApplicationTests.testFailCreate.executor": "Run",
@@ -79,7 +82,7 @@
     "Spring Boot Application.RealTimeAlertingServiceApplication (1).executor": "Run",
     "Spring Boot Application.com.example.RealTimeAlertingServiceApplication.executor": "Run",
     "Spring Boot Application.com.example.project.RealTimeAlertingServiceApplication.executor": "Run",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "develop",
     "kotlin-language-version-configured": "true",
     "project.structure.last.edited": "Libraries",
     "project.structure.proportion": "0.0",
@@ -95,7 +98,7 @@
       <recent name="com.example" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.RealTimeAlertingServiceApplicationTests.shouldCreateOneAlertWhenManyRules">
+  <component name="RunManager" selected="JUnit.RealTimeAlertingServiceApplicationTests">
     <configuration name="RealTimeAlertingServiceApplication" type="AmplicodeSpringBootApplication" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.example.RealTimeAlertingService.RealTimeAlertingServiceApplication" />
       <module name="RealTimeAlertingService" />
@@ -118,7 +121,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="RealTimeAlertingServiceApplicationTests.shouldBehaveSafely" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="RealTimeAlertingServiceApplicationTests.shouldCreateAlertAndRetry" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="RealTimeAlertingService" />
       <extension name="coverage">
         <pattern>
@@ -128,13 +131,13 @@
       </extension>
       <option name="PACKAGE_NAME" value="com.example.RealTimeAlertingService" />
       <option name="MAIN_CLASS_NAME" value="com.example.RealTimeAlertingService.RealTimeAlertingServiceApplicationTests" />
-      <option name="METHOD_NAME" value="shouldBehaveSafely" />
+      <option name="METHOD_NAME" value="shouldCreateAlertAndRetry" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="RealTimeAlertingServiceApplicationTests.shouldCreateOneAlertWhenManyRules" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="RealTimeAlertingServiceApplicationTests.shouldNotCreateAlertWhenAlertInCooldown" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="RealTimeAlertingService" />
       <extension name="coverage">
         <pattern>
@@ -144,13 +147,13 @@
       </extension>
       <option name="PACKAGE_NAME" value="com.example.RealTimeAlertingService" />
       <option name="MAIN_CLASS_NAME" value="com.example.RealTimeAlertingService.RealTimeAlertingServiceApplicationTests" />
-      <option name="METHOD_NAME" value="shouldCreateOneAlertWhenManyRules" />
+      <option name="METHOD_NAME" value="shouldNotCreateAlertWhenAlertInCooldown" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="RealTimeAlertingServiceApplicationTests.shouldNotCreateAlertWhenEventTypeNotEquals" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="RealTimeAlertingServiceApplicationTests.shouldNotCreateAlertWhenRuleDisabled" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="RealTimeAlertingService" />
       <extension name="coverage">
         <pattern>
@@ -160,13 +163,13 @@
       </extension>
       <option name="PACKAGE_NAME" value="com.example.RealTimeAlertingService" />
       <option name="MAIN_CLASS_NAME" value="com.example.RealTimeAlertingService.RealTimeAlertingServiceApplicationTests" />
-      <option name="METHOD_NAME" value="shouldNotCreateAlertWhenEventTypeNotEquals" />
+      <option name="METHOD_NAME" value="shouldNotCreateAlertWhenRuleDisabled" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="RealTimeAlertingServiceApplicationTests.testTwoAlert" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="RealTimeAlertingServiceApplicationTests.shouldNotCreateAlertWithSameRule" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="RealTimeAlertingService" />
       <extension name="coverage">
         <pattern>
@@ -176,7 +179,7 @@
       </extension>
       <option name="PACKAGE_NAME" value="com.example.RealTimeAlertingService" />
       <option name="MAIN_CLASS_NAME" value="com.example.RealTimeAlertingService.RealTimeAlertingServiceApplicationTests" />
-      <option name="METHOD_NAME" value="testTwoAlert" />
+      <option name="METHOD_NAME" value="shouldNotCreateAlertWithSameRule" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -184,11 +187,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.RealTimeAlertingServiceApplicationTests.shouldCreateOneAlertWhenManyRules" />
-        <item itemvalue="JUnit.RealTimeAlertingServiceApplicationTests.shouldBehaveSafely" />
-        <item itemvalue="JUnit.RealTimeAlertingServiceApplicationTests.shouldNotCreateAlertWhenEventTypeNotEquals" />
         <item itemvalue="JUnit.RealTimeAlertingServiceApplicationTests" />
-        <item itemvalue="JUnit.RealTimeAlertingServiceApplicationTests.testTwoAlert" />
+        <item itemvalue="JUnit.RealTimeAlertingServiceApplicationTests.shouldCreateAlertAndRetry" />
+        <item itemvalue="JUnit.RealTimeAlertingServiceApplicationTests.shouldNotCreateAlertWithSameRule" />
+        <item itemvalue="JUnit.RealTimeAlertingServiceApplicationTests.shouldNotCreateAlertWhenRuleDisabled" />
+        <item itemvalue="JUnit.RealTimeAlertingServiceApplicationTests.shouldNotCreateAlertWhenAlertInCooldown" />
       </list>
     </recent_temporary>
   </component>
@@ -217,16 +220,5 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/project/services/AlertProcessingService.java</url>
-          <line>26</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

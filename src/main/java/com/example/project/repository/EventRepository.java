@@ -1,7 +1,6 @@
 package com.example.project.repository;
 
 import com.example.project.model.events.Event;
-//import jakarta.persistence.EntityNotFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,11 +27,8 @@ public class EventRepository implements IEventRepository {
 
     @Override
     public void deleteEvent(Long id) {
-        if(eventMap.containsKey(id)){
+        if (eventMap.containsKey(id)) {
             eventMap.remove(id);
         }
-//        else{
-//            throw new EntityNotFoundException();
-//        }
     }
 }

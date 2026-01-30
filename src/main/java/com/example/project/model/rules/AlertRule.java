@@ -4,8 +4,6 @@ import com.example.project.model.events.Event;
 import com.example.project.model.events.EventField;
 import com.example.project.model.events.EventType;
 import com.example.project.model.rules.conditions.Condition;
-
-import java.time.Clock;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
@@ -21,12 +19,12 @@ public class AlertRule {
     private final LocalDateTime createdAt;
 
     private String description;
-    private int cooldown = 0;
+    private int cooldownInSeconds = 0;
     private int maxRetries = 3;
     private Duration comparisonWindow = Duration.ofMinutes(5);
 
 
-    public AlertRule(String name, EventType eventType, EventField eventField, Severity severity, Condition condition) {
+    public AlertRule(String name, EventType eventType, EventField eventField, Severity severity, Condition condition, LocalDateTime now) {
         if(!eventType.supports(eventField)){
             throw new IllegalStateException("Field " + eventField + " not supported by " + eventType);
         }
@@ -36,19 +34,19 @@ public class AlertRule {
         this.eventType = eventType;
         this.eventField = eventField;
         this.severity = severity;
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = now;
     }
 
 
-    public boolean matchesEventType(Event event){
+    public boolean isMatchesEventType(Event event){
         if(!enabled) return false;
         return this.eventType == event.getType();
     }
 
-    public boolean shouldFire(Event event, Clock clock){
+    public boolean shouldFire(Event event, LocalDateTime now){
         if(!enabled) return false;
         if(event.getType() != eventType) return false;
-        if(!isInComparisonWindow(event.getTimestamp(), LocalDateTime.now(clock))) return false;
+        if(!isInComparisonWindow(event.getTimestamp(), now)) return false;
 
         return event.getDouble(eventField)
                 .map(condition::evaluate)
@@ -58,12 +56,12 @@ public class AlertRule {
     /**
     *   Проверка на нахождение в "кулдауне"
     * */
-    public boolean isInCooldown(LocalDateTime lastTriggeredAt, Clock clock){
-        if(cooldown <= 0 || lastTriggeredAt == null){
+    public boolean isInCooldown(LocalDateTime lastTriggeredAt, LocalDateTime now){
+        if(cooldownInSeconds <= 0 || lastTriggeredAt == null){
             return false;
         }
-        return lastTriggeredAt.plusSeconds(cooldown)
-                .isAfter(LocalDateTime.now(clock));
+        return lastTriggeredAt.plusSeconds(cooldownInSeconds)
+                .isAfter(now);
     }
 
     /**
@@ -75,9 +73,12 @@ public class AlertRule {
         return Duration.between(eventTime, referenceTime).compareTo(comparisonWindow) <= 0;
     }
 
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 
-    public void setCooldown(int cooldown) {
-        this.cooldown = cooldown;
+    public void setCooldownInSeconds(int cooldownInSeconds) {
+        this.cooldownInSeconds = cooldownInSeconds;
     }
 
     public void setDescription(String description) {
@@ -110,7 +111,7 @@ public class AlertRule {
 
     public String getDescription() {return description;}
 
-    public int getCooldown() {return cooldown;}
+    public int getCooldownInSeconds() {return cooldownInSeconds;}
 
     public int getMaxRetries() {return maxRetries;}
 

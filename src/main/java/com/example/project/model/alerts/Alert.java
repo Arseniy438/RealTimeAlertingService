@@ -3,96 +3,81 @@ package com.example.project.model.alerts;
 import com.example.project.model.rules.AlertRule;
 import com.example.project.model.events.Event;
 import com.example.project.model.rules.Severity;
-import com.example.project.services.AlertRuleService;
-//import jakarta.persistence.*;
-
-import java.time.Clock;
 import java.time.LocalDateTime;
 
-//@Entity
-//@Table(name = "alerts")
-public class Alert {
-    //    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    private AlertRule rule;
+public class Alert {
+
+    private Long id;
+    private final AlertRule rule;
     private String message;
-    private LocalDateTime createdAt;
+    private final LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private AlertStatus status;
     private Severity severity;
-    private Event event;
-    private int retryCount;
+    private final Event event;
+    private int retryCount; // сколько раз ретраили
 
 
-    public Alert() {}
-
-    public Alert(AlertRule rule, Event event, String message, Severity severity, int retryCount) {
+    public Alert(AlertRule rule, Event event, String message, Severity severity, int retryCount, LocalDateTime now) {
         this.rule = rule;
         this.message = message;
         this.severity = severity;
         this.event = event;
         this.retryCount = retryCount;
         this.status = AlertStatus.NEW;
-        this.createdAt = LocalDateTime.now(Clock.systemUTC());
-        this.updatedAt = LocalDateTime.now(Clock.systemUTC());
+        this.createdAt = now;
+        this.updatedAt = now;
     }
 
-    public void activate() {
+    public void activate(LocalDateTime now) {
         if (status != AlertStatus.NEW) {
             throw new IllegalStateException("Cannot activate alert from " + status);
         }
         status = AlertStatus.ACTIVE;
-        touch(Clock.systemUTC());
+        touch(now);
     }
 
-    public static Alert create(AlertRule rule, Event event, Clock clock) {
-        Alert alert = new Alert(rule, event, rule.getDescription(), rule.getSeverity(), 0);
+    public static Alert create(AlertRule rule, Event event, LocalDateTime now) {
+        Alert alert = new Alert(rule, event, rule.getDescription(), rule.getSeverity(), 0, now);
         alert.status = AlertStatus.ACTIVE;
-        alert.createdAt = LocalDateTime.now(clock);
-        alert.updatedAt = alert.createdAt;
         return alert;
     }
 
-    public void failed() {
+    public void failed(LocalDateTime now) {
         if (status != AlertStatus.FAILED) {
             status = AlertStatus.FAILED;
-            touch(Clock.systemUTC());
+            touch(now);
         }
     }
 
-    public void acknowledged() {
-        if (status != AlertStatus.ACTIVE && status != AlertStatus.ACKNOWLEDGED) {
-            throw new IllegalStateException("Cannot activate alert from " + status);
+    public void acknowledged(LocalDateTime now) {
+        if (status != AlertStatus.ACTIVE) {
+            throw new IllegalStateException("Cannot acknowledge alert from " + status);
         }
         status = AlertStatus.ACKNOWLEDGED;
-        touch(Clock.systemUTC());
+        touch(now);
     }
 
-    public void resolve() {
+    public void resolve(LocalDateTime now) {
         if (status != AlertStatus.ACTIVE && status != AlertStatus.ACKNOWLEDGED) {
             throw new IllegalStateException("Cannot resolve alert from " + status);
         }
         status = AlertStatus.RESOLVED;
-        touch(Clock.systemUTC());
+        touch(now);
     }
 
-    public boolean canRetry() {
+    public void retry(LocalDateTime now) {
         retryCount++;
         if (retryCount >= rule.getMaxRetries()) {
-            failed();
-            return false;
+            failed(now);
+
         }
-        return true;
+        touch(now);
     }
 
-    public void incrementRetry() {
-        retryCount++;
-    }
-
-    private void touch(Clock clock) {
-        updatedAt = LocalDateTime.now(clock);
+    private void touch(LocalDateTime now) {
+        updatedAt = now;
     }
 
     public LocalDateTime getUpdatedAt() {

@@ -1,38 +1,22 @@
 package com.example.RealTimeAlertingService;
 
-import com.example.project.model.alerts.Alert;
-import com.example.project.model.events.Event;
-import com.example.project.model.events.EventField;
-import com.example.project.model.events.EventType;
-import com.example.project.model.rules.AlertRule;
-import com.example.project.model.rules.Severity;
-import com.example.project.model.rules.conditions.Condition;
-import com.example.project.model.rules.conditions.GreaterThanCondition;
-import com.example.project.model.rules.conditions.LessThanCondition;
+import com.example.project.model.events.*;
+import com.example.project.model.alerts.*;
+import com.example.project.model.rules.conditions.*;
+import com.example.project.model.rules.*;
 import com.example.project.repository.AlertRepository;
 import com.example.project.repository.AlertRuleRepository;
 import com.example.project.repository.IAlertRepository;
 import com.example.project.repository.IAlertRuleRepository;
 import com.example.project.services.AlertProcessingService;
 import com.example.project.services.AlertRuleService;
-
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-
-import org.springframework.boot.test.context.SpringBootTest;
 import org.junit.jupiter.api.Test;
-import org.springframework.cglib.core.Local;
-
-
-import java.time.Clock;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.util.HashMap;
 import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -48,12 +32,13 @@ public class RealTimeAlertingServiceApplicationTests {
             Instant.parse("2026-01-01T10:00:00Z"),
             ZoneOffset.UTC
     );
+    Clock otherClock = Clock.systemUTC();
 
     @BeforeEach
     public void setUp() {
         ruleRepository = new AlertRuleRepository();
         alertRepository = new AlertRepository();
-        alertRuleService = new AlertRuleService(ruleRepository);
+        alertRuleService = new AlertRuleService(ruleRepository, fixedClock);
         processingService = new AlertProcessingService(alertRepository, alertRuleService, fixedClock);
 
     }
@@ -67,16 +52,40 @@ public class RealTimeAlertingServiceApplicationTests {
                 EventType.CPU,
                 EventField.CPU_USAGE,
                 Severity.CRITICAL,
-                greaterThan);
-        ruleRepository.addAlertRule(rule);
+                greaterThan, LocalDateTime.now(fixedClock));
+        alertRuleService.addAlertRule(rule);
 
         Map<EventField, Object> map = new HashMap<>();
         map.put(EventField.CPU_USAGE, 10.0);
-        Event event = new Event(EventType.CPU, LocalDateTime.now(), map);
+        Event event = new Event(EventType.CPU, LocalDateTime.now(fixedClock), map);
 
         processingService.process(event);
 
         assertTrue(alertRepository.findActiveByRule(rule).isPresent());
+    }
+
+
+    @Test
+    @DisplayName("Переводит статус алерта в failed после 3 обработок события")
+    public void shouldCreateAlertAndRetry() {
+        Condition greaterThan = new GreaterThanCondition(10.0);
+        AlertRule rule = new AlertRule("cpuLog", EventType.CPU, EventField.CPU_USAGE, Severity.INFO, greaterThan, LocalDateTime.now(fixedClock));
+        alertRuleService.addAlertRule(rule);
+
+        Map<EventField, Object> map = new HashMap<>();
+        map.put(EventField.CPU_USAGE, 50.0);
+        Event event1 = new Event(EventType.CPU, LocalDateTime.now(fixedClock), map);
+
+
+        processingService.process(event1);
+
+        processingService.process(event1);
+        processingService.process(event1);
+        processingService.process(event1);
+
+
+        Alert alert = alertRepository.getAlert(1L).get();
+        assertEquals(alert.getStatus(), AlertStatus.FAILED);
     }
 
 
@@ -89,13 +98,13 @@ public class RealTimeAlertingServiceApplicationTests {
                 EventType.CPU,
                 EventField.CPU_USAGE,
                 Severity.INFO,
-                lessThan
+                lessThan,LocalDateTime.now(fixedClock)
         );
-        ruleRepository.addAlertRule(rule);
+        alertRuleService.addAlertRule(rule);
 
         Map<EventField, Object> map = new HashMap<>();
         map.put(EventField.CPU_USAGE, 13.0);
-        Event event = new Event(EventType.CPU, LocalDateTime.now(), map);
+        Event event = new Event(EventType.CPU, LocalDateTime.now(fixedClock), map);
 
         processingService.process(event);
 
@@ -111,14 +120,14 @@ public class RealTimeAlertingServiceApplicationTests {
                 EventType.CPU,
                 EventField.CPU_USAGE,
                 Severity.INFO,
-                lessThan
+                lessThan,LocalDateTime.now(fixedClock)
         );
-        ruleRepository.addAlertRule(rule);
+        alertRuleService.addAlertRule(rule);
 
         Map<EventField, Object> map = new HashMap<>();
         map.put(EventField.CPU_USAGE, 1.0);
-        Event event = new Event(EventType.CPU, LocalDateTime.now(), map);
-        Event event2 = new Event(EventType.CPU, LocalDateTime.now(), map);
+        Event event = new Event(EventType.CPU, LocalDateTime.now(fixedClock), map);
+        Event event2 = new Event(EventType.CPU, LocalDateTime.now(fixedClock), map);
 
         processingService.process(event);
         processingService.process(event2);
@@ -136,14 +145,14 @@ public class RealTimeAlertingServiceApplicationTests {
                 EventType.CPU,
                 EventField.CPU_USAGE,
                 Severity.INFO,
-                lessThan
+                lessThan,LocalDateTime.now(fixedClock)
         );
-        ruleRepository.addAlertRule(rule);
+        alertRuleService.addAlertRule(rule);
 
         Map<EventField, Object> map = new HashMap<>();
         map.put(EventField.DISK_FREE, 1.0);
         IllegalArgumentException e = Assertions.assertThrows(IllegalArgumentException.class,
-                () -> new Event(EventType.CPU, LocalDateTime.now(), map));
+                () -> new Event(EventType.CPU, LocalDateTime.now(fixedClock), map));
 
         assertTrue(e.getMessage().contains("not allowed for event type"));
     }
@@ -158,7 +167,7 @@ public class RealTimeAlertingServiceApplicationTests {
                         EventType.CPU,
                         EventField.DISK_FREE,
                         Severity.INFO,
-                        lessThan));
+                        lessThan,LocalDateTime.now(fixedClock)));
         assertTrue(e.getMessage().contains("not supported by"));
     }
 
@@ -172,9 +181,9 @@ public class RealTimeAlertingServiceApplicationTests {
                 EventType.CPU,
                 EventField.CPU_USAGE,
                 Severity.INFO,
-                lessThan
+                lessThan,LocalDateTime.now(fixedClock)
         );
-        ruleRepository.addAlertRule(rule);
+        alertRuleService.addAlertRule(rule);
 
         Map<EventField, Object> map = new HashMap<>();
         map.put(EventField.DISK_FREE, 5.0);
@@ -195,9 +204,9 @@ public class RealTimeAlertingServiceApplicationTests {
                 EventType.CPU,
                 EventField.CPU_USAGE,
                 Severity.INFO,
-                lessThan
+                lessThan,LocalDateTime.now(fixedClock)
         );
-        ruleRepository.addAlertRule(rule);
+        alertRuleService.addAlertRule(rule);
 
         Map<EventField, Object> map = new HashMap<>();
         map.put(EventField.CPU_USAGE, "12.0");
@@ -218,25 +227,25 @@ public class RealTimeAlertingServiceApplicationTests {
                 EventType.CPU,
                 EventField.CPU_USAGE,
                 Severity.INFO,
-                lessThan
+                lessThan,LocalDateTime.now(fixedClock)
         );
         AlertRule rule2 = new AlertRule(
                 "rule2",
                 EventType.CPU,
                 EventField.CPU_USAGE,
                 Severity.INFO,
-                greaterThan
+                greaterThan,LocalDateTime.now(fixedClock)
         );
         AlertRule rule3 = new AlertRule(
                 "rule3",
                 EventType.CPU,
                 EventField.CPU_USAGE,
                 Severity.INFO,
-                lessThan.and(greaterThan)
+                lessThan.and(greaterThan),LocalDateTime.now(fixedClock)
         );
-        ruleRepository.addAlertRule(rule1);
-        ruleRepository.addAlertRule(rule2);
-        ruleRepository.addAlertRule(rule3);
+        alertRuleService.addAlertRule(rule1);
+        alertRuleService.addAlertRule(rule2);
+        alertRuleService.addAlertRule(rule3);
 
         Map<EventField, Object> map = new HashMap<>();
         map.put(EventField.CPU_USAGE, 90.0);
@@ -245,5 +254,59 @@ public class RealTimeAlertingServiceApplicationTests {
         processingService.process(event);
         assertEquals(1, alertRepository.getAllAlert().size());
     }
+
+    @Test
+    @DisplayName("Не создает алерты когда событие вне comparison window")
+    public void shouldNotCreateAlertWhenEventNotInComparisonWindow() {
+        Condition lessThan = new LessThanCondition(40.0);
+        alertRuleService.createAlertRule("cpuCheck", EventType.CPU, EventField.CPU_USAGE, Severity.INFO, lessThan);
+        Map<EventField, Object> map = new HashMap<>();
+        map.put(EventField.CPU_USAGE, 10.0);
+        Event event = new Event(EventType.CPU, LocalDateTime.of(2021, 5, 21, 11, 55), map);
+
+        processingService.process(event);
+
+        assertEquals(0, alertRepository.getAllAlert().size());
+    }
+
+    @Test
+    @DisplayName("Не создает алерт когда срабатывает кулдаун")
+    public void shouldNotCreateAlertWhenAlertInCooldown(){
+        Condition lessThan = new LessThanCondition(60.0);
+        AlertRule rule = new AlertRule("cpuCheck", EventType.CPU, EventField.CPU_USAGE, Severity.INFO, lessThan,LocalDateTime.now(fixedClock));
+        rule.setCooldownInSeconds(10);
+        rule.setComparisonWindow(10000000L);
+        alertRuleService.addAlertRule(rule);
+
+        Map<EventField, Object> map = new HashMap<>();
+        map.put(EventField.CPU_USAGE, 10.0);
+        Event event = new Event(EventType.CPU,
+                LocalDateTime.now(otherClock), map);
+
+        processingService.process(event);
+        processingService.process(event);
+
+        assertEquals(0, alertRepository.getAllAlert().get(0).getRetryCount());
+        assertEquals(1, alertRepository.getAllAlert().size());
+    }
+
+    @Test
+    @DisplayName("Не создает алерт когда правило выключено")
+    public void shouldNotCreateAlertWhenRuleDisabled(){
+        Condition lessThan = new LessThanCondition(60.0);
+        AlertRule rule = new AlertRule("name", EventType.CPU, EventField.CPU_USAGE, Severity.INFO, lessThan,LocalDateTime.now(fixedClock));
+        rule.setEnabled(false);
+        alertRuleService.addAlertRule(rule);
+
+        Map<EventField, Object> map = new HashMap<>();
+        map.put(EventField.CPU_USAGE, 40.0);
+
+        Event event = new Event(EventType.CPU, LocalDateTime.now(fixedClock), map);
+
+        processingService.process(event);
+
+        assertEquals(0, alertRepository.getAllAlert().size());
+    }
+
 
 }

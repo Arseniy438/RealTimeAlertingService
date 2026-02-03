@@ -1,4 +1,4 @@
-package com.example.project.model.events;
+package com.example.project.domain.events;
 
 import java.util.Set;
 
@@ -6,7 +6,8 @@ public enum EventType {
 
     CPU(Set.of(EventField.CPU_USAGE)),
     DISK(Set.of(EventField.DISK_FREE)),
-    SERVICE(Set.of(EventField.RESPONSE_TIME));
+    SERVICE(Set.of(EventField.RESPONSE_TIME)),
+    RECOVERY(Set.of(EventField.RESOLVED));
 
 
     private final Set<EventField> eventFields;

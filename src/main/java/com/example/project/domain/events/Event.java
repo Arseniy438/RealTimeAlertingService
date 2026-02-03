@@ -1,4 +1,6 @@
-package com.example.project.model.events;
+package com.example.project.domain.events;
+
+import com.example.project.exceptions.NotSupportedTypeException;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -29,7 +31,7 @@ public class Event {
     private void validate(EventType type, Map<EventField, Object> data) {
         for (EventField eventField : data.keySet()) {
             if (!type.supports(eventField)) {
-                throw new IllegalArgumentException(
+                throw new NotSupportedTypeException(
                         "Field " + eventField + " not allowed for event type " + type
                 );
             }

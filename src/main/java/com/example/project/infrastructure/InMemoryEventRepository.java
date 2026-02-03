@@ -1,13 +1,14 @@
-package com.example.project.repository;
+package com.example.project.infrastructure;
 
-import com.example.project.model.events.Event;
+import com.example.project.domain.events.Event;
+import com.example.project.domain.repository.EventRepository;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class EventRepository implements IEventRepository {
+public class InMemoryEventRepository implements EventRepository {
 
     private final Map<Long, Event> eventMap = new HashMap<>();
     private final AtomicLong idGenerator = new AtomicLong(1);

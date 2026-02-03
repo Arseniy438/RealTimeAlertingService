@@ -1,8 +1,5 @@
 package com.example.project.infrastructure;
 
-import com.example.project.model.events.EventType;
-
-import javax.print.DocFlavor;
 import java.time.LocalDateTime;
 import java.util.Map;
 

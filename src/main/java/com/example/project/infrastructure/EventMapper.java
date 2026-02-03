@@ -1,8 +1,8 @@
 package com.example.project.infrastructure;
 
-import com.example.project.model.events.Event;
-import com.example.project.model.events.EventField;
-import com.example.project.model.events.EventType;
+import com.example.project.domain.events.Event;
+import com.example.project.domain.events.EventField;
+import com.example.project.domain.events.EventType;
 
 import java.time.LocalDateTime;
 import java.util.Map;

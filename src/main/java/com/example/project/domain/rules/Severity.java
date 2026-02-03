@@ -1,4 +1,4 @@
-package com.example.project.model.rules;
+package com.example.project.domain.rules;
 
 public enum Severity {
 

@@ -1,4 +1,4 @@
-package com.example.project.model.alerts;
+package com.example.project.domain.alerts;
 
 public enum AlertStatus {
 
@@ -6,6 +6,6 @@ public enum AlertStatus {
     ACKNOWLEDGED,
     RESOLVED,
     FAILED,
-    ACTIVE
+    ACTIVATED
 
 }

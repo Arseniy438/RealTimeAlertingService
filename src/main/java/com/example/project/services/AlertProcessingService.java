@@ -1,51 +1,55 @@
 package com.example.project.services;
 
-import com.example.project.model.alerts.Alert;
-import com.example.project.model.events.Event;
-import com.example.project.model.rules.AlertRule;
-import com.example.project.repository.IAlertRepository;
-
+import com.example.project.domain.alerts.Alert;
+import com.example.project.domain.events.Event;
+import com.example.project.domain.rules.AlertRule;
+import com.example.project.domain.repository.AlertRepository;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class AlertProcessingService {
 
-    private final IAlertRepository alertRepository;
+    private final AlertRepository alertRepository;
     private final AlertRuleService alertRuleService;
     private final Clock clock;
 
-    public AlertProcessingService(IAlertRepository alertRepository, AlertRuleService alertRuleService, Clock clock) {
+    public AlertProcessingService(AlertRepository alertRepository, AlertRuleService alertRuleService, Clock clock) {
         this.alertRepository = alertRepository;
         this.alertRuleService = alertRuleService;
         this.clock = clock;
     }
 
     public void process(Event event) {
+        LocalDateTime now = LocalDateTime.now(clock);
         for (AlertRule rule : alertRuleService.findMatching(event)) {
-            if (!rule.shouldFire(event, LocalDateTime.now(clock))) {
-                continue;
-            }
-
-            Optional<Alert> active = alertRepository.findActiveByRule(rule);
-
-            if (active.isPresent()) {
-                handleActiveAlert(active.get(), rule);
-            } else {
-                createNewAlert(rule, event);
-            }
+            processRule(rule, event, now);
         }
     }
 
-    private void createNewAlert(AlertRule rule, Event event) {
-        Alert alert = Alert.create(rule, event, LocalDateTime.now(clock));
+    private void processRule(AlertRule rule, Event event, LocalDateTime now) {
+        if (!rule.shouldFire(event, now)) {
+            return;
+        }
+        Optional<Alert> active = alertRepository.findActiveByRule(rule);
+
+        if (active.isPresent()) {
+            handleActiveAlert(active.get(), now);
+        } else {
+            createNewAlert(rule, event, now);
+        }
+    }
+
+    private void createNewAlert(AlertRule rule, Event event, LocalDateTime now) {
+        Alert alert = Alert.create(rule, event, now);
         alertRepository.saveAlert(alert);
     }
 
-    private void handleActiveAlert(Alert alert, AlertRule rule) {
-        if (rule.isInCooldown(alert.getUpdatedAt(), LocalDateTime.now(clock))) return;
+    private void handleActiveAlert(Alert alert, LocalDateTime now) {
+        if(alert.isInRecharge(now)) return;
+        alert.retry(now);
+        alert.setLastTriggeredAt(now);
 
-        alert.retry(LocalDateTime.now(clock));
         alertRepository.updateAlert(alert);
     }
 

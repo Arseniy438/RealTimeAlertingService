@@ -1,15 +1,16 @@
-package com.example.project.repository;
+package com.example.project.infrastructure;
 
-import com.example.project.model.alerts.Alert;
-import com.example.project.model.alerts.AlertStatus;
-import com.example.project.model.rules.AlertRule;
+import com.example.project.domain.alerts.Alert;
+import com.example.project.domain.alerts.AlertStatus;
+import com.example.project.domain.rules.AlertRule;
+import com.example.project.domain.repository.AlertRepository;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class AlertRepository implements IAlertRepository {
+public class InMemoryAlertRepository implements AlertRepository {
 
     private final HashMap<Long, Alert> alertMap = new HashMap<>();
     private final AtomicLong idGenerator = new AtomicLong(1);
@@ -47,7 +48,7 @@ public class AlertRepository implements IAlertRepository {
     public Optional<Alert> findActiveByRule(AlertRule rule) {
         return alertMap.values().stream()
                 .filter(alert -> alert.getRule().getId().equals(rule.getId()))
-                .filter(alert -> alert.getStatus() == AlertStatus.ACTIVE)
+                .filter(alert -> alert.getStatus() == AlertStatus.ACTIVATED)
                 .findFirst();
     }
 }

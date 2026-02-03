@@ -1,4 +1,4 @@
-package com.example.project.model.rules.conditions;
+package com.example.project.domain.rules.conditions;
 
 public class LessThanCondition implements Condition{
 

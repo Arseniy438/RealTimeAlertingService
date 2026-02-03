@@ -1,16 +1,15 @@
 package com.example.project;
 
-import com.example.project.model.events.Event;
-import com.example.project.model.events.EventField;
-import com.example.project.model.events.EventType;
-import com.example.project.model.rules.AlertRule;
-import com.example.project.model.rules.Severity;
-import com.example.project.model.rules.conditions.Condition;
-import com.example.project.model.rules.conditions.LessThanCondition;
-import com.example.project.repository.AlertRepository;
-import com.example.project.repository.AlertRuleRepository;
-import com.example.project.repository.IAlertRepository;
-import com.example.project.repository.IAlertRuleRepository;
+import com.example.project.domain.repository.AlertRepository;
+import com.example.project.domain.repository.AlertRuleRepository;
+import com.example.project.domain.events.Event;
+import com.example.project.domain.events.EventField;
+import com.example.project.domain.events.EventType;
+import com.example.project.domain.rules.Severity;
+import com.example.project.domain.rules.conditions.Condition;
+import com.example.project.domain.rules.conditions.LessThanCondition;
+import com.example.project.infrastructure.InMemoryAlertRepository;
+import com.example.project.infrastructure.InMemoryAlertRuleRepository;
 import com.example.project.services.AlertProcessingService;
 import com.example.project.services.AlertRuleService;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,8 +23,8 @@ import java.util.Map;
 public class RealTimeAlertingServiceApplication {
     public static void main(String[] args) throws InterruptedException {
 //        SpringApplication.run(RealTimeAlertingServiceApplication.class, args);
-        IAlertRuleRepository alertRuleRepository = new AlertRuleRepository();
-        IAlertRepository alertRepository = new AlertRepository();
+        AlertRuleRepository alertRuleRepository = new InMemoryAlertRuleRepository();
+        AlertRepository alertRepository = new InMemoryAlertRepository();
 
         Clock clock = Clock.systemUTC();
 

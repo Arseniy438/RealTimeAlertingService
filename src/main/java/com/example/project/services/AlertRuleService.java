@@ -1,14 +1,13 @@
 package com.example.project.services;
 
 
-import com.example.project.model.events.Event;
-import com.example.project.model.events.EventField;
-import com.example.project.model.events.EventType;
-import com.example.project.model.rules.AlertRule;
-import com.example.project.model.rules.Severity;
-import com.example.project.model.rules.conditions.Condition;
-import com.example.project.repository.IAlertRuleRepository;
-
+import com.example.project.domain.events.Event;
+import com.example.project.domain.events.EventField;
+import com.example.project.domain.events.EventType;
+import com.example.project.domain.rules.AlertRule;
+import com.example.project.domain.rules.Severity;
+import com.example.project.domain.rules.conditions.Condition;
+import com.example.project.domain.repository.AlertRuleRepository;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,10 +15,10 @@ import java.util.Optional;
 
 public class AlertRuleService {
 
-    private final IAlertRuleRepository alertRuleRepository;
+    private final AlertRuleRepository alertRuleRepository;
     private static Clock clock;
 
-    public AlertRuleService(IAlertRuleRepository alertRuleRepository, Clock clock) {
+    public AlertRuleService(AlertRuleRepository alertRuleRepository, Clock clock) {
         this.alertRuleRepository = alertRuleRepository;
         AlertRuleService.clock = clock;
     }

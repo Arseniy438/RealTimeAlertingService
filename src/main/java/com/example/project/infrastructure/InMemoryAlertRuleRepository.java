@@ -1,12 +1,13 @@
-package com.example.project.repository;
+package com.example.project.infrastructure;
 
-import com.example.project.model.events.Event;
-import com.example.project.model.rules.AlertRule;
+import com.example.project.domain.events.Event;
+import com.example.project.domain.rules.AlertRule;
+import com.example.project.domain.repository.AlertRuleRepository;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class AlertRuleRepository implements IAlertRuleRepository {
+public class InMemoryAlertRuleRepository implements AlertRuleRepository {
 
     private final Map<Long, AlertRule> ruleMap = new HashMap<>();
     private final AtomicLong idGenerator = new AtomicLong(1);

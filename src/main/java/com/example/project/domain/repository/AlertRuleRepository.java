@@ -1,13 +1,12 @@
-package com.example.project.repository;
+package com.example.project.domain.repository;
 
-import com.example.project.model.events.Event;
-import com.example.project.model.rules.AlertRule;
+import com.example.project.domain.events.Event;
+import com.example.project.domain.rules.AlertRule;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-public interface IAlertRuleRepository {
+public interface AlertRuleRepository {
 
 
     void addAlertRule(AlertRule rule);

@@ -1,9 +1,11 @@
-package com.example.project.model.rules;
+package com.example.project.domain.rules;
 
-import com.example.project.model.events.Event;
-import com.example.project.model.events.EventField;
-import com.example.project.model.events.EventType;
-import com.example.project.model.rules.conditions.Condition;
+import com.example.project.domain.events.Event;
+import com.example.project.domain.events.EventField;
+import com.example.project.domain.events.EventType;
+import com.example.project.domain.rules.conditions.Condition;
+import com.example.project.exceptions.NotSupportedTypeException;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 
@@ -26,7 +28,7 @@ public class AlertRule {
 
     public AlertRule(String name, EventType eventType, EventField eventField, Severity severity, Condition condition, LocalDateTime now) {
         if(!eventType.supports(eventField)){
-            throw new IllegalStateException("Field " + eventField + " not supported by " + eventType);
+            throw new NotSupportedTypeException("Field " + eventField + " not supported by " + eventType);
         }
         this.name = name;
         this.condition = condition;
@@ -60,8 +62,7 @@ public class AlertRule {
         if(cooldownInSeconds <= 0 || lastTriggeredAt == null){
             return false;
         }
-        return lastTriggeredAt.plusSeconds(cooldownInSeconds)
-                .isAfter(now);
+        return lastTriggeredAt.plusSeconds(cooldownInSeconds).isAfter(now);
     }
 
     /**
@@ -90,7 +91,7 @@ public class AlertRule {
     }
 
     public void setComparisonWindow(Long comparisonWindow) {
-        this.comparisonWindow = Duration.ofMillis(comparisonWindow);
+        this.comparisonWindow = Duration.ofSeconds(comparisonWindow);
     }
 
     public Long getId() {return id;}
@@ -115,7 +116,7 @@ public class AlertRule {
 
     public int getMaxRetries() {return maxRetries;}
 
-    public Long getComparisonWindow() {return comparisonWindow.toMillis();}
+    public Long getComparisonWindow() {return comparisonWindow.toSeconds();}
 
     public void setId(long andIncrement) {
         id = andIncrement;

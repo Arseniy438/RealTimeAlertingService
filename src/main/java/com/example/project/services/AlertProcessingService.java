@@ -4,10 +4,13 @@ import com.example.project.domain.alerts.Alert;
 import com.example.project.domain.events.Event;
 import com.example.project.domain.rules.AlertRule;
 import com.example.project.domain.repository.AlertRepository;
+import org.springframework.stereotype.Service;
+
 import java.time.Clock;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Optional;
 
+@Service
 public class AlertProcessingService {
 
     private final AlertRepository alertRepository;
@@ -21,13 +24,13 @@ public class AlertProcessingService {
     }
 
     public void process(Event event) {
-        LocalDateTime now = LocalDateTime.now(clock);
+        Instant now = Instant.now(clock);
         for (AlertRule rule : alertRuleService.findMatching(event)) {
             processRule(rule, event, now);
         }
     }
 
-    private void processRule(AlertRule rule, Event event, LocalDateTime now) {
+    private void processRule(AlertRule rule, Event event, Instant now) {
         if (!rule.shouldFire(event, now)) {
             return;
         }
@@ -40,12 +43,12 @@ public class AlertProcessingService {
         }
     }
 
-    private void createNewAlert(AlertRule rule, Event event, LocalDateTime now) {
+    private void createNewAlert(AlertRule rule, Event event, Instant now) {
         Alert alert = Alert.create(rule, event, now);
         alertRepository.saveAlert(alert);
     }
 
-    private void handleActiveAlert(Alert alert, LocalDateTime now) {
+    private void handleActiveAlert(Alert alert, Instant now) {
         if(alert.isInRecharge(now)) return;
         alert.retry(now);
         alert.setLastTriggeredAt(now);

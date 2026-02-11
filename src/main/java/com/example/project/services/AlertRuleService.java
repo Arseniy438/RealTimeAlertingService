@@ -1,6 +1,5 @@
 package com.example.project.services;
 
-
 import com.example.project.domain.events.Event;
 import com.example.project.domain.events.EventField;
 import com.example.project.domain.events.EventType;
@@ -8,11 +7,14 @@ import com.example.project.domain.rules.AlertRule;
 import com.example.project.domain.rules.Severity;
 import com.example.project.domain.rules.conditions.Condition;
 import com.example.project.domain.repository.AlertRuleRepository;
+import org.springframework.stereotype.Service;
+
 import java.time.Clock;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class AlertRuleService {
 
     private final AlertRuleRepository alertRuleRepository;
@@ -28,12 +30,12 @@ public class AlertRuleService {
     }
 
     public static AlertRule createAlertRule(String name, EventType type, EventField field, Severity severity, Condition condition) {
-        AlertRule rule = new AlertRule(name, type, field, severity, condition, LocalDateTime.now(clock));
+        AlertRule rule = new AlertRule(name, type, field, severity, condition, Instant.now(clock));
         return rule;
     }
 
     public void addAlertRule(AlertRule alertRule) {
-        alertRuleRepository.addAlertRule(alertRule);
+        alertRuleRepository.saveAlertRule(alertRule);
     }
 
     public Optional<AlertRule> getAlertRule(Long id) {

@@ -4,7 +4,7 @@ import com.example.project.domain.alerts.Alert;
 import com.example.project.domain.events.EventType;
 import com.example.project.domain.rules.Severity;
 import java.time.Clock;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public class AlertService {
 
@@ -15,7 +15,7 @@ public class AlertService {
     }
 
     public void processEvent(Alert alert){
-        LocalDateTime now = LocalDateTime.now(clock);
+        Instant now = Instant.now(clock);
 //        AlertStatus.NEW
 //        AlertStatus.ACTIVATED
 //        AlertStatus.FAILED

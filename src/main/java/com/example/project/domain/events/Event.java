@@ -2,7 +2,7 @@ package com.example.project.domain.events;
 
 import com.example.project.exceptions.NotSupportedTypeException;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
 
@@ -10,12 +10,20 @@ public class Event {
 
     private Long id;
     private final EventType type;
-    private final LocalDateTime timestamp;
+    private final Instant occurredAt;
     private final Map<EventField, Object> data;
 
-    public Event(EventType type, LocalDateTime timestamp, Map<EventField, Object> data) {
+    public Event(EventType type, Instant timestamp, Map<EventField, Object> data) {
         this.type = type;
-        this.timestamp = timestamp;
+        this.occurredAt = timestamp;
+        validate(type, data);
+        this.data = Map.copyOf(data);
+    }
+
+    public Event(Long id, EventType type, Instant timestamp, Map<EventField, Object> data) {
+        this.id = id;
+        this.type = type;
+        this.occurredAt = timestamp;
         validate(type, data);
         this.data = Map.copyOf(data);
     }
@@ -47,8 +55,8 @@ public class Event {
         return type;
     }
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
+    public Instant getOccurredAt() {
+        return occurredAt;
     }
 
     public Map<EventField, Object> getData() {

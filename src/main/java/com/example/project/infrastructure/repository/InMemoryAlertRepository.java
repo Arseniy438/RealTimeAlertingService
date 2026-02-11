@@ -1,15 +1,17 @@
-package com.example.project.infrastructure;
+package com.example.project.infrastructure.repository;
 
 import com.example.project.domain.alerts.Alert;
 import com.example.project.domain.alerts.AlertStatus;
 import com.example.project.domain.rules.AlertRule;
 import com.example.project.domain.repository.AlertRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Repository
 public class InMemoryAlertRepository implements AlertRepository {
 
     private final HashMap<Long, Alert> alertMap = new HashMap<>();

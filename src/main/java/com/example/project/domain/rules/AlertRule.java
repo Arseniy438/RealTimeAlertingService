@@ -7,7 +7,7 @@ import com.example.project.domain.rules.conditions.Condition;
 import com.example.project.exceptions.NotSupportedTypeException;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public class AlertRule {
 
@@ -18,7 +18,7 @@ public class AlertRule {
     private final EventField eventField;
     private final Severity severity;
     private final Condition condition;
-    private final LocalDateTime createdAt;
+    private final Instant createdAt;
 
     private String description;
     private int cooldownInSeconds = 0;
@@ -26,8 +26,8 @@ public class AlertRule {
     private Duration comparisonWindow = Duration.ofMinutes(5);
 
 
-    public AlertRule(String name, EventType eventType, EventField eventField, Severity severity, Condition condition, LocalDateTime now) {
-        if(!eventType.supports(eventField)){
+    public AlertRule(String name, EventType eventType, EventField eventField, Severity severity, Condition condition, Instant now) {
+        if (!eventType.supports(eventField)) {
             throw new NotSupportedTypeException("Field " + eventField + " not supported by " + eventType);
         }
         this.name = name;
@@ -39,16 +39,26 @@ public class AlertRule {
         this.createdAt = now;
     }
 
+    public AlertRule(Long id, String name, boolean enabled, EventType eventType, EventField eventField, Severity severity, Condition condition, Instant createdAt) {
+        this.id = id;
+        this.name = name;
+        this.enabled = enabled;
+        this.eventType = eventType;
+        this.eventField = eventField;
+        this.severity = severity;
+        this.condition = condition;
+        this.createdAt = createdAt;
+    }
 
-    public boolean isMatchesEventType(Event event){
-        if(!enabled) return false;
+    public boolean isMatchesEventType(Event event) {
+        if (!enabled) return false;
         return this.eventType == event.getType();
     }
 
-    public boolean shouldFire(Event event, LocalDateTime now){
-        if(!enabled) return false;
-        if(event.getType() != eventType) return false;
-        if(!isInComparisonWindow(event.getTimestamp(), now)) return false;
+    public boolean shouldFire(Event event, Instant now) {
+        if (!enabled) return false;
+        if (event.getType() != eventType) return false;
+        if (!isInComparisonWindow(event.getOccurredAt(), now)) return false;
 
         return event.getDouble(eventField)
                 .map(condition::evaluate)
@@ -56,10 +66,10 @@ public class AlertRule {
     }
 
     /**
-    *   Проверка на нахождение в "кулдауне"
-    * */
-    public boolean isInCooldown(LocalDateTime lastTriggeredAt, LocalDateTime now){
-        if(cooldownInSeconds <= 0 || lastTriggeredAt == null){
+     * Проверка на нахождение в "кулдауне"
+     */
+    public boolean isInCooldown(Instant lastTriggeredAt, Instant now) {
+        if (cooldownInSeconds <= 0 || lastTriggeredAt == null) {
             return false;
         }
         return lastTriggeredAt.plusSeconds(cooldownInSeconds).isAfter(now);
@@ -67,10 +77,11 @@ public class AlertRule {
 
     /**
      * Проверка на нахождение в допустимом промежутке времени
-     * @param eventTime время события
+     *
+     * @param eventTime     время события
      * @param referenceTime опорное(текущее или контрольное) время
      */
-    public boolean isInComparisonWindow(LocalDateTime eventTime, LocalDateTime referenceTime){
+    public boolean isInComparisonWindow(Instant eventTime, Instant referenceTime) {
         return Duration.between(eventTime, referenceTime).compareTo(comparisonWindow) <= 0;
     }
 
@@ -94,29 +105,53 @@ public class AlertRule {
         this.comparisonWindow = Duration.ofSeconds(comparisonWindow);
     }
 
-    public Long getId() {return id;}
+    public Long getId() {
+        return id;
+    }
 
-    public String getName() {return name;}
+    public String getName() {
+        return name;
+    }
 
-    public boolean isEnabled() {return enabled;}
+    public boolean isEnabled() {
+        return enabled;
+    }
 
-    public EventType getSourceType() {return eventType;}
+    public EventType getSourceType() {
+        return eventType;
+    }
 
-    public EventField getSourceName() {return eventField;}
+    public EventField getSourceName() {
+        return eventField;
+    }
 
-    public Severity getSeverity() {return severity;}
+    public Severity getSeverity() {
+        return severity;
+    }
 
-    public Condition getCondition() {return condition;}
+    public Condition getCondition() {
+        return condition;
+    }
 
-    public LocalDateTime getCreatedAt() {return createdAt;}
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
 
-    public String getDescription() {return description;}
+    public String getDescription() {
+        return description;
+    }
 
-    public int getCooldownInSeconds() {return cooldownInSeconds;}
+    public int getCooldownInSeconds() {
+        return cooldownInSeconds;
+    }
 
-    public int getMaxRetries() {return maxRetries;}
+    public int getMaxRetries() {
+        return maxRetries;
+    }
 
-    public Long getComparisonWindow() {return comparisonWindow.toSeconds();}
+    public Long getComparisonWindow() {
+        return comparisonWindow.toSeconds();
+    }
 
     public void setId(long andIncrement) {
         id = andIncrement;

@@ -5,8 +5,8 @@ import com.example.project.domain.alerts.*;
 import com.example.project.domain.rules.conditions.*;
 import com.example.project.domain.rules.*;
 import com.example.project.exceptions.NotSupportedTypeException;
-import com.example.project.infrastructure.InMemoryAlertRepository;
-import com.example.project.infrastructure.InMemoryAlertRuleRepository;
+import com.example.project.infrastructure.repository.InMemoryAlertRepository;
+import com.example.project.infrastructure.repository.InMemoryAlertRuleRepository;
 import com.example.project.domain.repository.AlertRepository;
 import com.example.project.domain.repository.AlertRuleRepository;
 import com.example.project.services.AlertProcessingService;
@@ -31,7 +31,7 @@ public class RealTimeAlertingServiceApplicationTests {
     AlertRuleService alertRuleService;
 
     AlertProcessingService processingService;
-    LocalDateTime now;
+    Instant now;
 
     Clock fixedClock = Clock.fixed(
             Instant.parse("2026-01-01T10:00:00Z"),
@@ -45,7 +45,7 @@ public class RealTimeAlertingServiceApplicationTests {
         alertRepository = new InMemoryAlertRepository();
         alertRuleService = new AlertRuleService(ruleRepository, fixedClock);
         processingService = new AlertProcessingService(alertRepository, alertRuleService, fixedClock);
-        now = LocalDateTime.now(fixedClock);
+        now = Instant.now(fixedClock);
     }
 
     @Test
@@ -126,14 +126,14 @@ public class RealTimeAlertingServiceApplicationTests {
                 EventType.CPU,
                 EventField.CPU_USAGE,
                 Severity.INFO,
-                lessThan, LocalDateTime.now(fixedClock)
+                lessThan, now
         );
         alertRuleService.addAlertRule(rule);
 
         Map<EventField, Object> map = new HashMap<>();
         map.put(EventField.CPU_USAGE, 1.0);
-        Event event = new Event(EventType.CPU, LocalDateTime.now(fixedClock), map);
-        Event event2 = new Event(EventType.CPU, LocalDateTime.now(fixedClock), map);
+        Event event = new Event(EventType.CPU, now, map);
+        Event event2 = new Event(EventType.CPU, now, map);
 
         processingService.process(event);
         processingService.process(event2);
@@ -269,7 +269,7 @@ public class RealTimeAlertingServiceApplicationTests {
         AlertRuleService.createAlertRule("cpuCheck", EventType.CPU, EventField.CPU_USAGE, Severity.INFO, lessThan);
         Map<EventField, Object> map = new HashMap<>();
         map.put(EventField.CPU_USAGE, 10.0);
-        Event event = new Event(EventType.CPU, LocalDateTime.of(2021, 5, 21, 11, 55), map);
+        Event event = new Event(EventType.CPU, Instant.parse("2018-11-30T18:35:24.00Z"), map);
 
         processingService.process(event);
 
@@ -280,7 +280,7 @@ public class RealTimeAlertingServiceApplicationTests {
     @DisplayName("Не увеличивает число ретраев когда срабатывает кулдаун")
     public void shouldNotCreateAlertWhenAlertInCooldown() {
         Condition lessThan = new LessThanCondition(60.0);
-        AlertRule rule = new AlertRule("cpuCheck", EventType.CPU, EventField.CPU_USAGE, Severity.INFO, lessThan, LocalDateTime.now(fixedClock));
+        AlertRule rule = new AlertRule("cpuCheck", EventType.CPU, EventField.CPU_USAGE, Severity.INFO, lessThan, now);
         rule.setCooldownInSeconds(100);
         rule.setComparisonWindow(10000000L);
         alertRuleService.addAlertRule(rule);
@@ -288,9 +288,9 @@ public class RealTimeAlertingServiceApplicationTests {
         Map<EventField, Object> map = new HashMap<>();
         map.put(EventField.CPU_USAGE, 10.0);
         Event event = new Event(EventType.CPU,
-                LocalDateTime.now(fixedClock), map);
+                now, map);
         Event event1 = new Event(EventType.CPU,
-                LocalDateTime.now(fixedClock), map);
+                now, map);
 
         processingService.process(event);
         processingService.process(event1);

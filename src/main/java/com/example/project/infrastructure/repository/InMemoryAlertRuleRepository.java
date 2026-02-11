@@ -1,19 +1,21 @@
-package com.example.project.infrastructure;
+package com.example.project.infrastructure.repository;
 
 import com.example.project.domain.events.Event;
 import com.example.project.domain.rules.AlertRule;
 import com.example.project.domain.repository.AlertRuleRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Repository
 public class InMemoryAlertRuleRepository implements AlertRuleRepository {
 
     private final Map<Long, AlertRule> ruleMap = new HashMap<>();
     private final AtomicLong idGenerator = new AtomicLong(1);
 
     @Override
-    public void addAlertRule(AlertRule rule) {
+    public void saveAlertRule(AlertRule rule) {
         if (rule.getId() == null) {
             rule.setId(idGenerator.getAndIncrement());
         }

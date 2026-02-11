@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface AlertRuleRepository {
 
 
-    void addAlertRule(AlertRule rule);
+    void saveAlertRule(AlertRule rule);
     Optional<AlertRule> getAlertRule(Long id);
     void deleteAlertRule(Long id);
     List<AlertRule> findRuleByEvent(Event event);

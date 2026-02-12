@@ -12,4 +12,14 @@ public class GreaterThanCondition implements Condition{
     public boolean evaluate(double actualValue) {
         return actualValue>threshold;
     }
+
+    @Override
+    public ConditionType type() {
+        return ConditionType.GREATER_THAN;
+    }
+
+    @Override
+    public double threshold() {
+        return threshold;
+    }
 }

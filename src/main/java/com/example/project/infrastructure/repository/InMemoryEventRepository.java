@@ -3,8 +3,6 @@ package com.example.project.infrastructure.repository;
 import com.example.project.domain.events.Event;
 import com.example.project.domain.events.EventType;
 import com.example.project.domain.repository.EventRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,8 +10,6 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 
-@Repository
-@RequiredArgsConstructor
 public class InMemoryEventRepository implements EventRepository {
 
     private final Map<Long, Event> eventMap = new HashMap<>();

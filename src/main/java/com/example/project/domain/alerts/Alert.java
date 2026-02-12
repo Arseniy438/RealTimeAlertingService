@@ -1,7 +1,7 @@
 package com.example.project.domain.alerts;
 
-import com.example.project.domain.rules.AlertRule;
 import com.example.project.domain.events.Event;
+import com.example.project.domain.rules.AlertRule;
 import com.example.project.domain.rules.Severity;
 import com.example.project.exceptions.UnsuitableStatusException;
 
@@ -17,7 +17,7 @@ public class Alert {
     private AlertStatus status;
     private Severity severity;
     private final Event event;
-    private int retryCount; // сколько раз ретраили
+    private int retryCount;
     private Instant lastTriggeredAt;
 
     public Alert(AlertRule rule, Event event, String message, Severity severity, int retryCount, Instant now) {
@@ -32,18 +32,29 @@ public class Alert {
         this.lastTriggeredAt = now;
     }
 
-    public Alert(Long id, AlertRule rule, Event event, Severity severity, int retryCount, Instant now) {
+    public Alert(
+            Long id,
+            AlertRule rule,
+            Event event,
+            String message,
+            Instant createdAt,
+            Instant updatedAt,
+            AlertStatus status,
+            Severity severity,
+            int retryCount,
+            Instant lastTriggeredAt
+    ) {
         this.id = id;
         this.rule = rule;
+        this.message = message;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.status = status;
         this.severity = severity;
         this.event = event;
         this.retryCount = retryCount;
-        this.status = AlertStatus.NEW;
-        this.createdAt = now;
-        this.updatedAt = now;
-        this.lastTriggeredAt = now;
+        this.lastTriggeredAt = lastTriggeredAt;
     }
-
 
     public void activate(Instant now) {
         if (status == AlertStatus.NEW) {
@@ -72,7 +83,6 @@ public class Alert {
         } else {
             throw new UnsuitableStatusException("Cannot acknowledge alert from " + status);
         }
-
     }
 
     public void resolve(Instant now) {
@@ -86,17 +96,15 @@ public class Alert {
 
     public void retry(Instant now) {
         retryCount++;
-        if (!canRetry(now)) {
+        if (!canRetry()) {
             failed(now);
+            return;
         }
         touch(now);
     }
 
-    public boolean canRetry(Instant now) {
-        if (retryCount < rule.getMaxRetries()) {
-            return true;
-        }
-        return false;
+    public boolean canRetry() {
+        return retryCount < rule.getMaxRetries();
     }
 
     public boolean isInRecharge(Instant now) {
@@ -155,7 +163,7 @@ public class Alert {
         return severity;
     }
 
-    public void setId(long andIncrement) {
-        id = andIncrement;
+    public void setId(long id) {
+        this.id = id;
     }
 }

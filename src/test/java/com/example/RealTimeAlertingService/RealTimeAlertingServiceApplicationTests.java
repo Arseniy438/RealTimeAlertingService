@@ -266,7 +266,8 @@ public class RealTimeAlertingServiceApplicationTests {
     @DisplayName("Не создает алерты когда событие вне comparison window")
     public void shouldNotCreateAlertWhenEventNotInComparisonWindow() {
         Condition lessThan = new LessThanCondition(40.0);
-        AlertRuleService.createAlertRule("cpuCheck", EventType.CPU, EventField.CPU_USAGE, Severity.INFO, lessThan);
+        AlertRule rule = alertRuleService.createAlertRule("cpuCheck", EventType.CPU, EventField.CPU_USAGE, Severity.INFO, lessThan);
+        alertRuleService.addAlertRule(rule);
         Map<EventField, Object> map = new HashMap<>();
         map.put(EventField.CPU_USAGE, 10.0);
         Event event = new Event(EventType.CPU, Instant.parse("2018-11-30T18:35:24.00Z"), map);

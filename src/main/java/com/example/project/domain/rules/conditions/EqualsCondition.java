@@ -11,4 +11,14 @@ public class EqualsCondition implements Condition{
     public boolean evaluate(double actualValue){
         return threshold == actualValue;
     }
+
+    @Override
+    public ConditionType type() {
+        return ConditionType.EQUALS;
+    }
+
+    @Override
+    public double threshold() {
+        return threshold;
+    }
 }

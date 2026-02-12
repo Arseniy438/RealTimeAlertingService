@@ -12,4 +12,14 @@ public class LessThanCondition implements Condition{
     public boolean evaluate(double actualValue) {
         return actualValue<threshold;
     }
+
+    @Override
+    public ConditionType type() {
+        return ConditionType.LESS_THAN;
+    }
+
+    @Override
+    public double threshold() {
+        return threshold;
+    }
 }

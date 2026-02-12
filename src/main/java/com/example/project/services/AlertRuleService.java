@@ -3,10 +3,10 @@ package com.example.project.services;
 import com.example.project.domain.events.Event;
 import com.example.project.domain.events.EventField;
 import com.example.project.domain.events.EventType;
+import com.example.project.domain.repository.AlertRuleRepository;
 import com.example.project.domain.rules.AlertRule;
 import com.example.project.domain.rules.Severity;
 import com.example.project.domain.rules.conditions.Condition;
-import com.example.project.domain.repository.AlertRuleRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
@@ -18,20 +18,19 @@ import java.util.Optional;
 public class AlertRuleService {
 
     private final AlertRuleRepository alertRuleRepository;
-    private static Clock clock;
+    private final Clock clock;
 
     public AlertRuleService(AlertRuleRepository alertRuleRepository, Clock clock) {
         this.alertRuleRepository = alertRuleRepository;
-        AlertRuleService.clock = clock;
+        this.clock = clock;
     }
 
     public List<AlertRule> findMatching(Event event) {
         return alertRuleRepository.findRuleByEvent(event);
     }
 
-    public static AlertRule createAlertRule(String name, EventType type, EventField field, Severity severity, Condition condition) {
-        AlertRule rule = new AlertRule(name, type, field, severity, condition, Instant.now(clock));
-        return rule;
+    public AlertRule createAlertRule(String name, EventType type, EventField field, Severity severity, Condition condition) {
+        return new AlertRule(name, type, field, severity, condition, Instant.now(clock));
     }
 
     public void addAlertRule(AlertRule alertRule) {
@@ -45,5 +44,4 @@ public class AlertRuleService {
     public void deleteAlertRule(Long id) {
         alertRuleRepository.deleteAlertRule(id);
     }
-
 }

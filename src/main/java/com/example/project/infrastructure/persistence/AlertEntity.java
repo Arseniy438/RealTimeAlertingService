@@ -1,14 +1,11 @@
 package com.example.project.infrastructure.persistence;
 
 import com.example.project.domain.alerts.AlertStatus;
-import com.example.project.domain.events.Event;
-import com.example.project.domain.rules.AlertRule;
 import com.example.project.domain.rules.Severity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Fetch;
 
 import java.time.Instant;
 
@@ -18,83 +15,67 @@ import java.time.Instant;
 @Getter
 public class AlertEntity {
 
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "alert_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "rule_id")
-    private AlertRule ruleId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "rule_id", nullable = false)
+    private AlertRuleEntity rule;
 
-    @Column(name = "created_at")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "event_id", nullable = false)
+    private EventEntity event;
+
+    @Column(name = "message", nullable = false)
+    private String message;
+
+    @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "alert_status")
+    @Column(name = "alert_status", nullable = false)
     private AlertStatus status;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "severity")
+    @Column(name = "severity", nullable = false)
     private Severity severity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id")
-    private Event event;
-
-    @Column(name = "retry_count")
+    @Column(name = "retry_count", nullable = false)
     private int retryCount;
 
     @Column(name = "last_triggered_at")
     private Instant lastTriggeredAt;
 
 
-    public AlertEntity(AlertRule ruleId, Instant createdAt, Instant updatedAt, AlertStatus status, Severity severity, Event event, int retryCount, Instant lastTriggeredAt) {
-        this.ruleId = ruleId;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public AlertEntity(
+            AlertRuleEntity rule,
+            EventEntity event,
+            String message,
+            Instant createdAt,
+            Instant updatedAt,
+            AlertStatus status,
+            Severity severity,
+            int retryCount,
+            Instant lastTriggeredAt
+    ) {
+        this.rule = rule;
+        this.event = event;
+        this.message = message;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.status = status;
         this.severity = severity;
-        this.event = event;
         this.retryCount = retryCount;
         this.lastTriggeredAt = lastTriggeredAt;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public AlertRule getRuleId() {
-        return ruleId;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public Instant getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public AlertStatus getStatus() {
-        return status;
-    }
-
-    public Severity getSeverity() {
-        return severity;
-    }
-
-    public Event getEvent() {
-        return event;
-    }
-
-    public int getRetryCount() {
-        return retryCount;
-    }
-
-    public Instant getLastTriggeredAt() {
-        return lastTriggeredAt;
     }
 }

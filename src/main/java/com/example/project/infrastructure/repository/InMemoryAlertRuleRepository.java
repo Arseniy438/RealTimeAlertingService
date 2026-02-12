@@ -3,12 +3,10 @@ package com.example.project.infrastructure.repository;
 import com.example.project.domain.events.Event;
 import com.example.project.domain.rules.AlertRule;
 import com.example.project.domain.repository.AlertRuleRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
-@Repository
 public class InMemoryAlertRuleRepository implements AlertRuleRepository {
 
     private final Map<Long, AlertRule> ruleMap = new HashMap<>();

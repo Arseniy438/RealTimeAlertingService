@@ -2,12 +2,13 @@ package com.example.project.infrastructure.persistence;
 
 import com.example.project.domain.events.EventField;
 import com.example.project.domain.events.EventType;
-import com.example.project.domain.rules.conditions.Condition;
+import com.example.project.domain.rules.Severity;
+import com.example.project.domain.rules.conditions.ConditionType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import com.example.project.domain.rules.Severity;
+
 import java.time.Instant;
 
 @Entity
@@ -17,74 +18,75 @@ import java.time.Instant;
 public class AlertRuleEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "rule_id")
     private Long id;
 
-    @Column(name = "rule_name")
+    @Column(name = "rule_name", nullable = false)
     private String name;
 
-    @Column(name = "enabled")
-    private boolean isEnabled;
+    @Column(name = "enabled", nullable = false)
+    private boolean enabled;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "event_type")
+    @Column(name = "event_type", nullable = false)
     private EventType type;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "event_field")
+    @Column(name = "event_field", nullable = false)
     private EventField field;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "severity")
+    @Column(name = "severity", nullable = false)
     private Severity severity;
 
-    @JoinColumn(name = "condition_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Condition condition;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "condition_type", nullable = false)
+    private ConditionType conditionType;
 
-    @Column(name = "created_at")
+    @Column(name = "condition_threshold", nullable = false)
+    private double conditionThreshold;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "cooldown_in_seconds", nullable = false)
+    private int cooldownInSeconds;
+
+    @Column(name = "max_retries", nullable = false)
+    private int maxRetries;
+
+    @Column(name = "comparison_window_seconds", nullable = false)
+    private long comparisonWindowSeconds;
+
+    @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
-
-    public AlertRuleEntity(String name, boolean isEnabled, EventType type, EventField field, Severity severity, Condition condition, Instant createdAt) {
+    public AlertRuleEntity(
+            String name,
+            boolean enabled,
+            EventType type,
+            EventField field,
+            Severity severity,
+            ConditionType conditionType,
+            double conditionThreshold,
+            String description,
+            int cooldownInSeconds,
+            int maxRetries,
+            long comparisonWindowSeconds,
+            Instant createdAt
+    ) {
         this.name = name;
-        this.isEnabled = isEnabled;
+        this.enabled = enabled;
         this.type = type;
         this.field = field;
         this.severity = severity;
-        this.condition = condition;
+        this.conditionType = conditionType;
+        this.conditionThreshold = conditionThreshold;
+        this.description = description;
+        this.cooldownInSeconds = cooldownInSeconds;
+        this.maxRetries = maxRetries;
+        this.comparisonWindowSeconds = comparisonWindowSeconds;
         this.createdAt = createdAt;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public boolean isEnabled() {
-        return isEnabled;
-    }
-
-    public EventType getType() {
-        return type;
-    }
-
-    public EventField getField() {
-        return field;
-    }
-
-    public Severity getSeverity() {
-        return severity;
-    }
-
-    public Condition getCondition() {
-        return condition;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
     }
 }

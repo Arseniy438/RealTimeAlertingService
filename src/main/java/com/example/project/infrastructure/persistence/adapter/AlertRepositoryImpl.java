@@ -1,14 +1,17 @@
 package com.example.project.infrastructure.persistence.adapter;
 
 import com.example.project.domain.alerts.Alert;
+import com.example.project.domain.alerts.AlertStatus;
 import com.example.project.domain.repository.AlertRepository;
 import com.example.project.domain.rules.AlertRule;
 import com.example.project.infrastructure.persistence.jpa.AlertEntityRepository;
 import com.example.project.infrastructure.persistence.mapper.AlertMapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class AlertRepositoryImpl implements AlertRepository {
 
     private final AlertEntityRepository jpaRepository;
@@ -41,7 +44,10 @@ public class AlertRepositoryImpl implements AlertRepository {
 
     @Override
     public Optional<Alert> findActiveByRule(AlertRule rule) {
-        return jpaRepository.findAlertEntityByRuleId(rule).map(alertMapper::toDomain);
+        if (rule.getId() == null) {
+            return Optional.empty();
+        }
+        return jpaRepository.findFirstByRuleIdAndStatus(rule.getId(), AlertStatus.ACTIVATED).map(alertMapper::toDomain);
     }
 
     @Override

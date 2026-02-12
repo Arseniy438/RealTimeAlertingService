@@ -7,11 +7,13 @@ import com.example.project.infrastructure.persistence.EventEntity;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Component;
 
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Component
 public class EventMapper {
 
     private final ObjectMapper objectMapper;
@@ -26,7 +28,6 @@ public class EventMapper {
         String payloadJson = serializePayload(domain.getData());
         return new EventEntity(domain.getType(), domain.getOccurredAt(), payloadJson);
     }
-
 
     public Event toDomain(EventEntity entity) {
         if (entity == null) return null;
@@ -48,7 +49,7 @@ public class EventMapper {
 
             return objectMapper.writeValueAsString(stringKeyMap);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new EventMappingException("Cannot serialize event payload", e);
         }
     }
 
@@ -58,25 +59,21 @@ public class EventMapper {
         }
 
         try {
-            Map<String, Object> stringKeyMap = objectMapper.readValue(
-                    payloadJson,
-                    new TypeReference<>() {
-                    }
-            );
-
+            Map<String, Object> stringKeyMap = objectMapper.readValue(payloadJson, new TypeReference<>() {});
             Map<EventField, Object> result = new EnumMap<>(EventField.class);
 
             for (Map.Entry<String, Object> entry : stringKeyMap.entrySet()) {
+                EventField field;
                 try {
-                    EventField field = EventField.valueOf(entry.getKey());
-                    result.put(field, entry.getValue());
+                    field = EventField.valueOf(entry.getKey());
                 } catch (IllegalArgumentException e) {
-
+                    throw new EventMappingException("Unknown event field key: " + entry.getKey(), e);
                 }
+                result.put(field, entry.getValue());
             }
             return result;
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new EventMappingException("Cannot deserialize event payload", e);
         }
     }
 }

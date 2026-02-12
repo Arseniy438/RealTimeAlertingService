@@ -2,10 +2,12 @@ package com.example.project.services;
 
 import com.example.project.domain.alerts.Alert;
 import com.example.project.domain.events.EventType;
-import com.example.project.domain.rules.Severity;
+import org.springframework.stereotype.Service;
+
 import java.time.Clock;
 import java.time.Instant;
 
+@Service
 public class AlertService {
 
     private final Clock clock;
@@ -14,35 +16,15 @@ public class AlertService {
         this.clock = clock;
     }
 
-    public void processEvent(Alert alert){
+    public void processEvent(Alert alert) {
         Instant now = Instant.now(clock);
-//        AlertStatus.NEW
-//        AlertStatus.ACTIVATED
-//        AlertStatus.FAILED
-//        AlertStatus.ACKNOWLEDGED
-//        AlertStatus.RESOLVED
 
-        if(alert.getRule().getSeverity() == Severity.CRITICAL){
-            alert.getRule().setMaxRetries(5);
-//            alert.activate(now);
+        if (!alert.canRetry() && !alert.isFailed()) {
+            alert.failed(now);
         }
 
-        if(!alert.canRetry(now)){
-            System.out.println("Status: "+alert.getStatus() +
-                    "\nCooldown: " + alert.getRule().getCooldownInSeconds()+
-                    "\nRetries: " + alert.getRetryCount() + " MAX="+alert.getRule().getMaxRetries());
-        }
-
-        if(alert.getEvent().getType() == EventType.RECOVERY){
+        if (alert.getEvent().getType() == EventType.RECOVERY) {
             alert.resolve(now);
         }
-
-
-
-
-
-
-
-
     }
 }

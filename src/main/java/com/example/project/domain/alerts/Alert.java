@@ -4,9 +4,11 @@ import com.example.project.domain.events.Event;
 import com.example.project.domain.rules.AlertRule;
 import com.example.project.domain.rules.Severity;
 import com.example.project.exceptions.UnsuitableStatusException;
+import lombok.Getter;
 
 import java.time.Instant;
 
+@Getter
 public class Alert {
 
     private Long id;
@@ -119,51 +121,26 @@ public class Alert {
         updatedAt = now;
     }
 
-    public Instant getLastTriggeredAt() {
-        return lastTriggeredAt;
-    }
-
     public void setLastTriggeredAt(Instant lastTriggeredAt) {
         this.lastTriggeredAt = lastTriggeredAt;
     }
 
-    public Instant getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public Event getEvent() {
-        return event;
-    }
-
-    public int getRetryCount() {
-        return retryCount;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public AlertRule getRule() {
-        return rule;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public AlertStatus getStatus() {
-        return status;
-    }
-
-    public Severity getSeverity() {
-        return severity;
-    }
-
     public void setId(long id) {
         this.id = id;
+    }
+
+
+    @Override
+    public String toString() {
+        return id + " " +
+                rule + " " +
+                message + " " +
+                createdAt + " " +
+                updatedAt + " " +
+                status + " " +
+                severity + " " +
+                event + " " +
+                retryCount + " " +
+                lastTriggeredAt;
     }
 }

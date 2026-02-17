@@ -1,14 +1,20 @@
 package com.example.RealTimeAlertingService;
 
-import com.example.project.domain.events.*;
-import com.example.project.domain.alerts.*;
-import com.example.project.domain.rules.conditions.*;
-import com.example.project.domain.rules.*;
+import com.example.project.domain.alerts.Alert;
+import com.example.project.domain.alerts.AlertStatus;
+import com.example.project.domain.events.Event;
+import com.example.project.domain.events.EventField;
+import com.example.project.domain.events.EventType;
+import com.example.project.domain.repository.AlertRepository;
+import com.example.project.domain.repository.AlertRuleRepository;
+import com.example.project.domain.rules.AlertRule;
+import com.example.project.domain.rules.Severity;
+import com.example.project.domain.rules.conditions.Condition;
+import com.example.project.domain.rules.conditions.GreaterThanCondition;
+import com.example.project.domain.rules.conditions.LessThanCondition;
 import com.example.project.exceptions.NotSupportedTypeException;
 import com.example.project.infrastructure.repository.InMemoryAlertRepository;
 import com.example.project.infrastructure.repository.InMemoryAlertRuleRepository;
-import com.example.project.domain.repository.AlertRepository;
-import com.example.project.domain.repository.AlertRuleRepository;
 import com.example.project.services.AlertProcessingService;
 import com.example.project.services.AlertRuleService;
 import com.example.project.services.AlertService;
@@ -17,7 +23,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.time.*;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +45,6 @@ public class RealTimeAlertingServiceApplicationTests {
             Instant.parse("2026-01-01T10:00:00Z"),
             ZoneOffset.UTC
     );
-    Clock otherClock = Clock.systemUTC();
 
     @BeforeEach
     public void setUp() {
@@ -87,7 +94,6 @@ public class RealTimeAlertingServiceApplicationTests {
         processingService.process(event1);
         processingService.process(event1);
         processingService.process(event1);
-//        processingService.process(event1);
 
 
         Alert alert = alertRepository.getAlert(1L).get();
@@ -322,7 +328,7 @@ public class RealTimeAlertingServiceApplicationTests {
     @Test
     @DisplayName("Увеличивает число макс ретраев до 5 при Severity.CRITICAL")
     public void shouldIncreaseMaxRetriesWhenRuleSeverityIsCritical() {
-        AlertService service = new AlertService(fixedClock);
+        AlertService service = new AlertService(fixedClock, alertRepository);
         AlertRule rule = new AlertRule("criticalRule", EventType.CPU,
                 EventField.CPU_USAGE, Severity.CRITICAL,
                 new GreaterThanCondition(85.0), now);

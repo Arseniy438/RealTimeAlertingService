@@ -2,8 +2,9 @@ package com.example.project.services;
 
 import com.example.project.domain.alerts.Alert;
 import com.example.project.domain.events.Event;
-import com.example.project.domain.rules.AlertRule;
 import com.example.project.domain.repository.AlertRepository;
+import com.example.project.domain.rules.AlertRule;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
@@ -11,17 +12,12 @@ import java.time.Instant;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class AlertProcessingService {
 
     private final AlertRepository alertRepository;
     private final AlertRuleService alertRuleService;
     private final Clock clock;
-
-    public AlertProcessingService(AlertRepository alertRepository, AlertRuleService alertRuleService, Clock clock) {
-        this.alertRepository = alertRepository;
-        this.alertRuleService = alertRuleService;
-        this.clock = clock;
-    }
 
     public void process(Event event) {
         Instant now = Instant.now(clock);

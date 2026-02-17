@@ -2,8 +2,8 @@ package com.example.project.infrastructure.repository;
 
 import com.example.project.domain.alerts.Alert;
 import com.example.project.domain.alerts.AlertStatus;
-import com.example.project.domain.rules.AlertRule;
 import com.example.project.domain.repository.AlertRepository;
+import com.example.project.domain.rules.AlertRule;
 
 import java.util.HashMap;
 import java.util.List;

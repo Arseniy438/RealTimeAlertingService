@@ -5,10 +5,12 @@ import com.example.project.domain.events.EventField;
 import com.example.project.domain.events.EventType;
 import com.example.project.domain.rules.conditions.Condition;
 import com.example.project.exceptions.NotSupportedTypeException;
+import lombok.Getter;
 
 import java.time.Duration;
 import java.time.Instant;
 
+@Getter
 public class AlertRule {
 
     private Long id;
@@ -105,48 +107,12 @@ public class AlertRule {
         this.comparisonWindow = Duration.ofSeconds(comparisonWindow);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
     public EventType getSourceType() {
         return eventType;
     }
 
     public EventField getSourceName() {
         return eventField;
-    }
-
-    public Severity getSeverity() {
-        return severity;
-    }
-
-    public Condition getCondition() {
-        return condition;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public int getCooldownInSeconds() {
-        return cooldownInSeconds;
-    }
-
-    public int getMaxRetries() {
-        return maxRetries;
     }
 
     public Long getComparisonWindow() {

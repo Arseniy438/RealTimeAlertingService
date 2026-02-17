@@ -33,19 +33,4 @@ public class EventEntity {
         this.payloadJson = payloadJson;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public EventType getType() {
-        return type;
-    }
-
-    public Instant getOccurredAt() {
-        return occurredAt;
-    }
-
-    public String getPayloadJson() {
-        return payloadJson;
-    }
 }

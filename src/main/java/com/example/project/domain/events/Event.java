@@ -1,11 +1,13 @@
 package com.example.project.domain.events;
 
 import com.example.project.exceptions.NotSupportedTypeException;
+import lombok.Getter;
 
 import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
 
+@Getter
 public class Event {
 
     private Long id;
@@ -45,22 +47,6 @@ public class Event {
             }
         }
 
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public EventType getType() {
-        return type;
-    }
-
-    public Instant getOccurredAt() {
-        return occurredAt;
-    }
-
-    public Map<EventField, Object> getData() {
-        return data;
     }
 
     public void setId(long andIncrement) {

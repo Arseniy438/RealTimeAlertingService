@@ -1,11 +1,7 @@
 package com.example.project.infrastructure.persistence.mapper;
 
 import com.example.project.domain.rules.AlertRule;
-import com.example.project.domain.rules.conditions.Condition;
-import com.example.project.domain.rules.conditions.ConditionType;
-import com.example.project.domain.rules.conditions.EqualsCondition;
-import com.example.project.domain.rules.conditions.GreaterThanCondition;
-import com.example.project.domain.rules.conditions.LessThanCondition;
+import com.example.project.domain.rules.conditions.*;
 import com.example.project.infrastructure.persistence.AlertRuleEntity;
 import org.springframework.stereotype.Component;
 

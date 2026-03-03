@@ -1,5 +1,8 @@
 package com.example.project.domain.rules.conditions;
 
+import lombok.Getter;
+
+@Getter
 public class EqualsCondition implements Condition{
     private final double threshold;
 

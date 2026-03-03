@@ -23,8 +23,10 @@ public class EventRepositoryImpl implements EventRepository {
     }
 
     @Override
-    public void save(Event event) {
-        jpaRepository.save(mapper.toEntity(event));
+    public Event save(Event event) {
+        var savedEntity = jpaRepository.save(mapper.toEntity(event));
+        event.setId(savedEntity.getId());
+        return event;
     }
 
     @Override

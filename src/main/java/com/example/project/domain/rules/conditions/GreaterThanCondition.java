@@ -1,5 +1,8 @@
 package com.example.project.domain.rules.conditions;
 
+import lombok.Getter;
+
+@Getter
 public class GreaterThanCondition implements Condition{
 
     private final double threshold;

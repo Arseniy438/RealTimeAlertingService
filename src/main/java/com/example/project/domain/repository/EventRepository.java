@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface EventRepository{
 
-    void save(Event event);
+    Event save(Event event);
 
     Optional<Event> findById(Long id);
 

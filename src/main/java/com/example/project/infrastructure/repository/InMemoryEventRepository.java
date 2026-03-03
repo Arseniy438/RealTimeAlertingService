@@ -17,11 +17,12 @@ public class InMemoryEventRepository implements EventRepository {
     private final AtomicLong idGenerator = new AtomicLong(1);
 
     @Override
-    public void save(Event event) {
+    public Event save(Event event) {
         if (event.getId() == null) {
             event.setId(idGenerator.getAndIncrement());
         }
         eventMap.put(event.getId(), event);
+        return event;
     }
 
     @Override

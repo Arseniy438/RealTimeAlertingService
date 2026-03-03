@@ -52,6 +52,6 @@ public class AlertRepositoryImpl implements AlertRepository {
 
     @Override
     public List<Alert> getAllAlert() {
-        return jpaRepository.findAll().stream().map(alertMapper::toDomain).toList();
+        return jpaRepository.findAllWithRuleAndEvent().stream().map(alertMapper::toDomain).toList();
     }
 }

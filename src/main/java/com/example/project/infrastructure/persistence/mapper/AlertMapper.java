@@ -1,6 +1,8 @@
 package com.example.project.infrastructure.persistence.mapper;
 
 import com.example.project.domain.alerts.Alert;
+import com.example.project.domain.events.Event;
+import com.example.project.domain.rules.AlertRule;
 import com.example.project.infrastructure.persistence.AlertEntity;
 import com.example.project.infrastructure.persistence.AlertRuleEntity;
 import com.example.project.infrastructure.persistence.EventEntity;
@@ -64,7 +66,7 @@ public class AlertMapper {
         );
     }
 
-    private AlertRuleEntity resolveRuleEntity(com.example.project.domain.rules.AlertRule rule) {
+    private AlertRuleEntity resolveRuleEntity(AlertRule rule) {
         if (rule.getId() != null) {
             return alertRuleEntityRepository.findById(rule.getId())
                     .orElseGet(() -> alertRuleMapper.toEntity(rule));
@@ -72,11 +74,11 @@ public class AlertMapper {
         return alertRuleMapper.toEntity(rule);
     }
 
-    private EventEntity resolveEventEntity(com.example.project.domain.events.Event event) {
+    private EventEntity resolveEventEntity(Event event) {
         if (event.getId() != null) {
             return eventEntityRepository.findById(event.getId())
-                    .orElseGet(() -> eventMapper.toEntity(event));
+                    .orElseGet(() -> eventEntityRepository.getReferenceById(event.getId()));
         }
-        return eventMapper.toEntity(event);
+        return eventEntityRepository.save(eventMapper.toEntity(event));
     }
 }

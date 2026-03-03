@@ -5,13 +5,15 @@ import com.example.project.domain.events.EventType;
 import com.example.project.domain.repository.AlertRepository;
 import com.example.project.domain.rules.Severity;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.time.Instant;
+import java.util.List;
 import java.util.NoSuchElementException;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AlertService {
@@ -34,13 +36,17 @@ public class AlertService {
         }
     }
 
-    @Transactional
     public Alert getAlert(Long id){
         return alertRepository.getAlert(id).orElseThrow(() -> new NoSuchElementException("Not found alert with id: \" + id"));
     }
 
+    public List<Alert> getAllAlert(){
+        return alertRepository.getAllAlert();
+    }
+
     public void deleteAlert(Long id){
         alertRepository.deleteAlert(id);
+        log.info("Deleted alert: id={}", id);
     }
 
 }

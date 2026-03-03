@@ -7,6 +7,7 @@ import com.example.project.domain.repository.AlertRuleRepository;
 import com.example.project.domain.rules.AlertRule;
 import com.example.project.domain.rules.Severity;
 import com.example.project.domain.rules.conditions.Condition;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
@@ -14,6 +15,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class AlertRuleService {
 
@@ -26,7 +28,9 @@ public class AlertRuleService {
     }
 
     public List<AlertRule> findMatching(Event event) {
-        return alertRuleRepository.findRuleByEvent(event);
+        var rules = alertRuleRepository.findRuleByEvent(event);
+        log.debug("Found {} rules for eventId={} eventType={}", rules.size(), event.getId(), event.getType());
+        return rules;
     }
 
     public AlertRule createAlertRule(String name, EventType type, EventField field, Severity severity, Condition condition) {
@@ -35,6 +39,11 @@ public class AlertRuleService {
 
     public void addAlertRule(AlertRule alertRule) {
         alertRuleRepository.saveAlertRule(alertRule);
+        log.info("Saved alert rule id={} name={} eventType={} field={}",
+                alertRule.getId(),
+                alertRule.getName(),
+                alertRule.getSourceType(),
+                alertRule.getSourceName());
     }
 
     public Optional<AlertRule> getAlertRule(Long id) {
@@ -43,5 +52,6 @@ public class AlertRuleService {
 
     public void deleteAlertRule(Long id) {
         alertRuleRepository.deleteAlertRule(id);
+        log.info("Deleted alert rule id={}", id);
     }
 }

@@ -147,6 +147,36 @@ public class RealTimeAlertingServiceApplicationTests {
         assertEquals(1, alertRepository.getAllAlert().size());
     }
 
+    @Test
+    @DisplayName("Создаются разные алерты, если это разные правила даже с одинаковой логикой")
+    public void shouldCreateDifferentAlertsForDifferentButEquivalentRules() {
+        Condition lessThan = new LessThanCondition(10.0);
+        AlertRule rule1 = new AlertRule(
+                "check-1",
+                EventType.CPU,
+                EventField.CPU_USAGE,
+                Severity.INFO,
+                lessThan, now
+        );
+        AlertRule rule2 = new AlertRule(
+                "check-2",
+                EventType.CPU,
+                EventField.CPU_USAGE,
+                Severity.INFO,
+                lessThan,
+                now.plusSeconds(5)
+        );
+        alertRuleService.addAlertRule(rule1);
+        alertRuleService.addAlertRule(rule2);
+
+        Map<EventField, Object> map = new HashMap<>();
+        map.put(EventField.CPU_USAGE, 1.0);
+        Event event = new Event(EventType.CPU, now, map);
+
+        processingService.process(event);
+
+        assertEquals(2, alertRepository.getAllAlert().size());
+    }
 
     @Test
     @DisplayName("Выбрасывает исключение если type event не совпадает с field event")

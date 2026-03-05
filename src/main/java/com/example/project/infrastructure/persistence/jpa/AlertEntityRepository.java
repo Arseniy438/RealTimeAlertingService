@@ -31,10 +31,12 @@ public interface AlertEntityRepository extends JpaRepository<AlertEntity, Long> 
     List<AlertEntity> findAllWithRuleAndEvent();
 
     @Query("""
-                select a
-                from AlertEntity a
-                where a.rule.id in :ruleIds
-                and a.status = ACTIVATED
-            """)
+       select a
+       from AlertEntity a
+       join fetch a.rule
+       join fetch a.event
+       where a.rule.id in :ruleIds
+       and a.status = ACTIVATED
+       """)
     List<AlertEntity> findActiveByRuleIds(@Param("ruleIds") Collection<Long> ruleIds);
 }

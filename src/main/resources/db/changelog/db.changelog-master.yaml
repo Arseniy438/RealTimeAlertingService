@@ -1,0 +1,193 @@
+databaseChangeLog:
+- changeSet:
+    id: 1770985280908-1
+    author: pankr (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: alert_rules_pkey
+            name: rule_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: comparison_window_seconds
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: condition_threshold
+            type: FLOAT8
+        - column:
+            constraints:
+              nullable: false
+            name: condition_type
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: cooldown_in_seconds
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: created_at
+            type: TIMESTAMP WITH TIME ZONE
+        - column:
+            name: description
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: enabled
+            type: BOOLEAN
+        - column:
+            constraints:
+              nullable: false
+            name: event_field
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: max_retries
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: rule_name
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: severity
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: event_type
+            type: VARCHAR(255)
+        tableName: alert_rules
+- changeSet:
+    id: 1770985280908-2
+    author: pankr (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: alerts_pkey
+            name: alert_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: created_at
+            type: TIMESTAMP WITH TIME ZONE
+        - column:
+            name: last_triggered_at
+            type: TIMESTAMP WITH TIME ZONE
+        - column:
+            constraints:
+              nullable: false
+            name: message
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: retry_count
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: severity
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: alert_status
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: updated_at
+            type: TIMESTAMP WITH TIME ZONE
+        - column:
+            constraints:
+              nullable: false
+            name: event_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: rule_id
+            type: BIGINT
+        tableName: alerts
+- changeSet:
+    id: 1770985280908-3
+    author: pankr (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: events_pkey
+            name: event_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: occurred_at
+            type: TIMESTAMP WITH TIME ZONE
+        - column:
+            constraints:
+              nullable: false
+            name: payload_json
+            type: TEXT
+        - column:
+            constraints:
+              nullable: false
+            name: type
+            type: VARCHAR(255)
+        tableName: events
+- changeSet:
+    id: 1770985280908-4
+    author: pankr (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: rule_id
+        baseTableName: alerts
+        constraintName: fk4ssykw2g8utpgi3ftc6ncp1s7
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: rule_id
+        referencedTableName: alert_rules
+        validate: true
+- changeSet:
+    id: 1770985280908-5
+    author: pankr (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: event_id
+        baseTableName: alerts
+        constraintName: fk62idpm74xgf1fhdfjj0xhiq4m
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: event_id
+        referencedTableName: events
+        validate: true
+

@@ -77,7 +77,7 @@ public class AlertRepositoryImpl implements AlertRepository {
                 .map(AlertRule::getId)
                 .toList();
 
-        return jpaRepository.findActiveByRuleIds(ruleIds)
+        return jpaRepository.findActiveByRuleIds(ruleIds, AlertStatus.ACTIVATED)
                 .stream()
                 .map(alertMapper::toDomain)
                 .toList();

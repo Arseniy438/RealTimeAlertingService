@@ -36,7 +36,7 @@ public interface AlertEntityRepository extends JpaRepository<AlertEntity, Long> 
        join fetch a.rule
        join fetch a.event
        where a.rule.id in :ruleIds
-       and a.status = ACTIVATED
+       and a.status = :status
        """)
-    List<AlertEntity> findActiveByRuleIds(@Param("ruleIds") Collection<Long> ruleIds);
+    List<AlertEntity> findActiveByRuleIds(@Param("ruleIds") Collection<Long> ruleIds, @Param("status") AlertStatus status);
 }

@@ -2,11 +2,13 @@ package com.example.project.infrastructure.persistence.jpa;
 
 import com.example.project.domain.alerts.AlertStatus;
 import com.example.project.infrastructure.persistence.AlertEntity;
-import org.springframework.data.domain.Example;
+import com.example.project.infrastructure.persistence.AlertRuleEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,4 +29,12 @@ public interface AlertEntityRepository extends JpaRepository<AlertEntity, Long> 
                join fetch a.event
             """)
     List<AlertEntity> findAllWithRuleAndEvent();
+
+    @Query("""
+                select a
+                from AlertEntity a
+                where a.rule.id in :ruleIds
+                and a.status = ACTIVATED
+            """)
+    List<AlertEntity> findActiveByRuleIds(@Param("ruleIds") Collection<Long> ruleIds);
 }

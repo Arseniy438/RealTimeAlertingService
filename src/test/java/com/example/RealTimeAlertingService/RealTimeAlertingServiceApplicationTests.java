@@ -37,6 +37,7 @@ public class RealTimeAlertingServiceApplicationTests {
     AlertRuleRepository ruleRepository;
     AlertRepository alertRepository;
     AlertRuleService alertRuleService;
+    AlertService alertService;
 
     AlertProcessingService processingService;
     Instant now;
@@ -51,7 +52,8 @@ public class RealTimeAlertingServiceApplicationTests {
         ruleRepository = new InMemoryAlertRuleRepository();
         alertRepository = new InMemoryAlertRepository();
         alertRuleService = new AlertRuleService(ruleRepository, fixedClock);
-        processingService = new AlertProcessingService(alertRepository, alertRuleService, fixedClock);
+        alertService = new AlertService(fixedClock, alertRepository);
+        processingService = new AlertProcessingService(alertService, alertRuleService, fixedClock);
         now = Instant.now(fixedClock);
     }
 

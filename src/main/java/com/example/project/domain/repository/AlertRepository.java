@@ -4,6 +4,7 @@ import com.example.project.domain.alerts.Alert;
 import com.example.project.domain.rules.AlertRule;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +19,8 @@ public interface AlertRepository {
     void deleteAlert(Long id);
 
     Optional<Alert> findActiveByRule(AlertRule rule);
+
+    List<Alert> findActiveByRules(Collection<AlertRule> rules);
 
     List<Alert> getAllAlert();
 }

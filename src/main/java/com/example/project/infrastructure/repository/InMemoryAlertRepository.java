@@ -5,6 +5,7 @@ import com.example.project.domain.alerts.AlertStatus;
 import com.example.project.domain.repository.AlertRepository;
 import com.example.project.domain.rules.AlertRule;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -50,5 +51,17 @@ public class InMemoryAlertRepository implements AlertRepository {
                 .filter(alert -> alert.getRule().getId().equals(rule.getId()))
                 .filter(alert -> alert.getStatus() == AlertStatus.ACTIVATED)
                 .findFirst();
+    }
+
+    @Override
+    public List<Alert> findActiveByRules(Collection<AlertRule> rules) {
+        if (rules.isEmpty()) {
+            return List.of();
+        }
+
+        return alertMap.values().stream()
+                .filter(alert -> alert.getStatus() == AlertStatus.ACTIVATED)
+                .filter(alert -> rules.contains(alert.getRule()))
+                .toList();
     }
 }

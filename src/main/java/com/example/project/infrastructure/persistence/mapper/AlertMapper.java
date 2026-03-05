@@ -6,36 +6,20 @@ import com.example.project.domain.rules.AlertRule;
 import com.example.project.infrastructure.persistence.AlertEntity;
 import com.example.project.infrastructure.persistence.AlertRuleEntity;
 import com.example.project.infrastructure.persistence.EventEntity;
-import com.example.project.infrastructure.persistence.jpa.AlertRuleEntityRepository;
-import com.example.project.infrastructure.persistence.jpa.EventEntityRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class AlertMapper {
 
     private final AlertRuleMapper alertRuleMapper;
     private final EventMapper eventMapper;
-    private final AlertRuleEntityRepository alertRuleEntityRepository;
-    private final EventEntityRepository eventEntityRepository;
 
-    public AlertMapper(
-            AlertRuleMapper alertRuleMapper,
-            EventMapper eventMapper,
-            AlertRuleEntityRepository alertRuleEntityRepository,
-            EventEntityRepository eventEntityRepository
-    ) {
-        this.alertRuleMapper = alertRuleMapper;
-        this.eventMapper = eventMapper;
-        this.alertRuleEntityRepository = alertRuleEntityRepository;
-        this.eventEntityRepository = eventEntityRepository;
-    }
-
-    public AlertEntity toEntity(Alert domain) {
-        AlertRuleEntity ruleEntity = resolveRuleEntity(domain.getRule());
-        EventEntity eventEntity = resolveEventEntity(domain.getEvent());
+    public AlertEntity toEntity(Alert domain, AlertRuleEntity alertRuleEntity, EventEntity eventEntity) {
 
         AlertEntity entity = new AlertEntity(
-                ruleEntity,
+                alertRuleEntity,
                 eventEntity,
                 domain.getMessage() == null ? "" : domain.getMessage(),
                 domain.getCreatedAt(),
@@ -66,19 +50,4 @@ public class AlertMapper {
         );
     }
 
-    private AlertRuleEntity resolveRuleEntity(AlertRule rule) {
-        if (rule.getId() != null) {
-            return alertRuleEntityRepository.findById(rule.getId())
-                    .orElseGet(() -> alertRuleMapper.toEntity(rule));
-        }
-        return alertRuleMapper.toEntity(rule);
-    }
-
-    private EventEntity resolveEventEntity(Event event) {
-        if (event.getId() != null) {
-            return eventEntityRepository.findById(event.getId())
-                    .orElseGet(() -> eventEntityRepository.getReferenceById(event.getId()));
-        }
-        return eventEntityRepository.save(eventMapper.toEntity(event));
-    }
 }

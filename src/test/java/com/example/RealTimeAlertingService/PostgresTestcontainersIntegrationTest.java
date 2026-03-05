@@ -17,6 +17,8 @@ import com.example.project.infrastructure.persistence.mapper.EventMapper;
 import com.example.project.services.AlertProcessingService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +57,13 @@ public class PostgresTestcontainersIntegrationTest {
 
         registry.add("spring.jpa.hibernate.ddl-auto", () -> "none");
         registry.add("spring.jpa.show-sql", () -> "false");
+    }
+
+    @BeforeEach
+    void cleanDb() {
+        alertEntityRepository.deleteAll();
+        eventEntityRepository.deleteAll();
+        alertRuleEntityRepository.deleteAll();
     }
 
     @Autowired
@@ -256,7 +265,7 @@ public class PostgresTestcontainersIntegrationTest {
         assertEquals(1, alerts.size());
         AlertEntity alert = alerts.get(0);
         assertEquals(3, alert.getRetryCount());
-        assertEquals(AlertStatus.FAILED,alert.getStatus());
+        assertEquals(AlertStatus.FAILED, alert.getStatus());
 
     }
 

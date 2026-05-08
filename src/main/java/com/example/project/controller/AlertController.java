@@ -1,21 +1,23 @@
 package com.example.project.controller;
 
 import com.example.project.domain.alerts.Alert;
+import com.example.project.dto.response.AlertResponse;
+import com.example.project.dto.response.AlertResponseMapper;
 import com.example.project.services.AlertService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "alerts")
 @RestController
 @RequestMapping("/alerts")
 @RequiredArgsConstructor
 public class AlertController {
 
     private final AlertService alertService;
+    private final AlertResponseMapper alertResponseMapper;
 
     @GetMapping("/all")
     public List<Alert> getAllAlerts(){
@@ -23,8 +25,13 @@ public class AlertController {
     }
 
     @GetMapping("/{id}")
-    public Alert getAlert(@PathVariable Long id){
-        return alertService.getAlert(id);
+    public AlertResponse getAlert(@PathVariable Long id){
+        return alertResponseMapper.toAlertResponse(alertService.getAlert(id));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteAlert(@PathVariable Long id){
+        alertService.deleteAlert(id);
     }
 
 }

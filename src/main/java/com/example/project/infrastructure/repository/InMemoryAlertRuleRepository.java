@@ -13,11 +13,17 @@ public class InMemoryAlertRuleRepository implements AlertRuleRepository {
     private final AtomicLong idGenerator = new AtomicLong(1);
 
     @Override
-    public void saveAlertRule(AlertRule rule) {
+    public AlertRule saveAlertRule(AlertRule rule) {
         if (rule.getId() == null) {
             rule.setId(idGenerator.getAndIncrement());
         }
         ruleMap.put(rule.getId(), rule);
+        return rule;
+    }
+
+    @Override
+    public boolean existsById(Long id) {
+        return ruleMap.containsKey(id);
     }
 
     @Override

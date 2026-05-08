@@ -2,7 +2,6 @@ package com.example.project.domain.repository;
 
 import com.example.project.domain.alerts.Alert;
 import com.example.project.domain.rules.AlertRule;
-import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
 import java.util.List;
@@ -23,4 +22,6 @@ public interface AlertRepository {
     List<Alert> findActiveByRules(Collection<AlertRule> rules);
 
     List<Alert> getAllAlert();
+
+    boolean existsById(Long id);
 }

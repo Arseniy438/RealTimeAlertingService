@@ -48,6 +48,11 @@ public class EventRepositoryImpl implements EventRepository {
     }
 
     @Override
+    public boolean existsById(Long id) {
+        return jpaRepository.existsById(id);
+    }
+
+    @Override
     public void deleteEvent(Long id) {
         jpaRepository.deleteById(id);
     }

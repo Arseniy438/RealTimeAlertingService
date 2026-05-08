@@ -46,6 +46,11 @@ public class InMemoryAlertRepository implements AlertRepository {
     }
 
     @Override
+    public boolean existsById(Long id) {
+        return alertMap.containsKey(id);
+    }
+
+    @Override
     public Optional<Alert> findActiveByRule(AlertRule rule) {
         return alertMap.values().stream()
                 .filter(alert -> alert.getRule().getId().equals(rule.getId()))

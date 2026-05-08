@@ -7,8 +7,8 @@ public enum EventType {
     CPU(Set.of(EventField.CPU_USAGE)),
     DISK(Set.of(EventField.DISK_FREE)),
     SERVICE(Set.of(EventField.RESPONSE_TIME)),
-    RECOVERY(Set.of(EventField.RESOLVED));
-
+    RECOVERY(Set.of(EventField.RESOLVED)),
+    GPU(Set.of(EventField.GPU_USAGE));
 
     private final Set<EventField> eventFields;
 

@@ -16,12 +16,12 @@ public class EqualsCondition implements Condition{
     }
 
     @Override
-    public ConditionType type() {
+    public ConditionType getType() {
         return ConditionType.EQUALS;
     }
 
     @Override
-    public double threshold() {
+    public double getThreshold() {
         return threshold;
     }
 }

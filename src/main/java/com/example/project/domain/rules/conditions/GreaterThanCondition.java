@@ -17,12 +17,12 @@ public class GreaterThanCondition implements Condition{
     }
 
     @Override
-    public ConditionType type() {
+    public ConditionType getType() {
         return ConditionType.GREATER_THAN;
     }
 
     @Override
-    public double threshold() {
+    public double getThreshold() {
         return threshold;
     }
 }

@@ -68,6 +68,11 @@ public class AlertRepositoryImpl implements AlertRepository {
     }
 
     @Override
+    public boolean existsById(Long id) {
+        return jpaRepository.existsById(id);
+    }
+
+    @Override
     public List<Alert> findActiveByRules(Collection<AlertRule> rules) {
         if (rules.isEmpty()) {
             return List.of();

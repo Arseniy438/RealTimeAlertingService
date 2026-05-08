@@ -5,6 +5,7 @@ import com.example.project.domain.events.EventType;
 import com.example.project.domain.repository.AlertRepository;
 import com.example.project.domain.rules.AlertRule;
 import com.example.project.domain.rules.Severity;
+import com.example.project.exceptions.AlertNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,6 @@ import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -62,7 +62,7 @@ public class AlertService {
     }
 
     public Alert getAlert(Long id) {
-        return alertRepository.getAlert(id).orElseThrow(() -> new NoSuchElementException("Not found alert with id: " + id));
+        return alertRepository.getAlert(id).orElseThrow(() -> new AlertNotFoundException("Not found alert with id: " + id));
     }
 
     public List<Alert> getAllAlert() {
@@ -70,6 +70,9 @@ public class AlertService {
     }
 
     public void deleteAlert(Long id) {
+        if(!alertRepository.existsById(id)){
+            throw new AlertNotFoundException("Not found alert with id: " + id);
+        }
         alertRepository.deleteAlert(id);
         log.info("Deleted alert: id={}", id);
     }

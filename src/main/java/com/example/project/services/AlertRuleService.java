@@ -7,13 +7,13 @@ import com.example.project.domain.repository.AlertRuleRepository;
 import com.example.project.domain.rules.AlertRule;
 import com.example.project.domain.rules.Severity;
 import com.example.project.domain.rules.conditions.Condition;
+import com.example.project.exceptions.RuleNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
 import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -37,8 +37,8 @@ public class AlertRuleService {
         return new AlertRule(name, type, field, severity, condition, Instant.now(clock));
     }
 
-    public void addAlertRule(AlertRule alertRule) {
-        alertRuleRepository.saveAlertRule(alertRule);
+    public void addAlertRule(AlertRule rule) {
+        AlertRule alertRule = alertRuleRepository.saveAlertRule(rule);
         log.info("Saved alert rule id={} name={} eventType={} field={}",
                 alertRule.getId(),
                 alertRule.getName(),
@@ -46,11 +46,14 @@ public class AlertRuleService {
                 alertRule.getSourceName());
     }
 
-    public Optional<AlertRule> getAlertRule(Long id) {
-        return alertRuleRepository.getAlertRule(id);
+    public AlertRule getAlertRule(Long id) {
+        return alertRuleRepository.getAlertRule(id).orElseThrow(() -> new RuleNotFoundException("Not found rule with id: " + id));
     }
 
     public void deleteAlertRule(Long id) {
+        if (!alertRuleRepository.existsById(id)) {
+            throw new RuleNotFoundException("Not found rule with id: " + id);
+        }
         alertRuleRepository.deleteAlertRule(id);
         log.info("Deleted alert rule id={}", id);
     }

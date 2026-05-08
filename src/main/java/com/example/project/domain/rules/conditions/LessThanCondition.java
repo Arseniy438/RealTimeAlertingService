@@ -17,12 +17,12 @@ public class LessThanCondition implements Condition{
     }
 
     @Override
-    public ConditionType type() {
+    public ConditionType getType() {
         return ConditionType.LESS_THAN;
     }
 
     @Override
-    public double threshold() {
+    public double getThreshold() {
         return threshold;
     }
 }

@@ -36,6 +36,11 @@ public class InMemoryEventRepository implements EventRepository {
     }
 
     @Override
+    public boolean existsById(Long id) {
+        return eventMap.containsKey(id);
+    }
+
+    @Override
     public void deleteEvent(Long id) {
         if (eventMap.containsKey(id)) {
             eventMap.remove(id);

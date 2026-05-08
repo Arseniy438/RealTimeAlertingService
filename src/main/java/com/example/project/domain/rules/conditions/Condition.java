@@ -4,9 +4,9 @@ public interface Condition {
 
     boolean evaluate(double value);
 
-    ConditionType type();
+    ConditionType getType();
 
-    double threshold();
+    double getThreshold();
 
     default Condition and(Condition other){
         return new Condition() {
@@ -16,13 +16,13 @@ public interface Condition {
             }
 
             @Override
-            public ConditionType type() {
-                return Condition.this.type();
+            public ConditionType getType() {
+                return Condition.this.getType();
             }
 
             @Override
-            public double threshold() {
-                return Condition.this.threshold();
+            public double getThreshold() {
+                return Condition.this.getThreshold();
             }
         };
     }
@@ -35,13 +35,13 @@ public interface Condition {
             }
 
             @Override
-            public ConditionType type() {
-                return Condition.this.type();
+            public ConditionType getType() {
+                return Condition.this.getType();
             }
 
             @Override
-            public double threshold() {
-                return Condition.this.threshold();
+            public double getThreshold() {
+                return Condition.this.getThreshold();
             }
         };
     }

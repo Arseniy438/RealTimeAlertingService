@@ -14,4 +14,6 @@ public interface EventRepository{
     List<Event> findByType(EventType type);
 
     void deleteEvent(Long id);
+
+    boolean existsById(Long id);
 }

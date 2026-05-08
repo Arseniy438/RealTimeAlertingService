@@ -41,6 +41,20 @@ public class AlertRule {
         this.createdAt = now;
     }
 
+    public AlertRule(String name, boolean enabled, EventType eventType, EventField eventField, Severity severity, Condition condition, Instant createdAt, String description, int cooldownInSeconds, int maxRetries, Duration comparisonWindow) {
+        this.name = name;
+        this.enabled = enabled;
+        this.eventType = eventType;
+        this.eventField = eventField;
+        this.severity = severity;
+        this.condition = condition;
+        this.createdAt = createdAt;
+        this.description = description;
+        this.cooldownInSeconds = cooldownInSeconds;
+        this.maxRetries = maxRetries;
+        this.comparisonWindow = comparisonWindow;
+    }
+
     public AlertRule(Long id, String name, boolean enabled, EventType eventType, EventField eventField, Severity severity, Condition condition, Instant createdAt) {
         this.id = id;
         this.name = name;

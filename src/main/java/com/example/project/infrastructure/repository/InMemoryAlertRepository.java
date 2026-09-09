@@ -17,11 +17,25 @@ public class InMemoryAlertRepository implements AlertRepository {
     private final AtomicLong idGenerator = new AtomicLong(1);
 
     @Override
-    public void saveAlert(Alert alert) {
+    public void acknowledge(Long id) {
+
+    }
+
+    @Override
+    public List<Alert> findRetryableAlerts() {
+        return alertMap.values()
+                .stream()
+                .filter(e->e.getStatus()!=AlertStatus.ACKNOWLEDGED)
+                .toList();
+    }
+
+    @Override
+    public Alert saveAlert(Alert alert) {
         if (alert.getId() == null) {
             alert.setId(idGenerator.getAndIncrement());
         }
         alertMap.put(alert.getId(), alert);
+        return alert;
     }
 
     @Override
@@ -36,9 +50,7 @@ public class InMemoryAlertRepository implements AlertRepository {
 
     @Override
     public void deleteAlert(Long id) {
-        if (alertMap.containsKey(id)) {
-            alertMap.remove(id);
-        }
+        alertMap.remove(id);
     }
 
     public List<Alert> getAllAlert() {

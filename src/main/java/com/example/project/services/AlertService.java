@@ -1,14 +1,14 @@
 package com.example.project.services;
 
 import com.example.project.domain.alerts.Alert;
-import com.example.project.domain.events.EventType;
 import com.example.project.domain.repository.AlertRepository;
 import com.example.project.domain.rules.AlertRule;
-import com.example.project.domain.rules.Severity;
 import com.example.project.exceptions.AlertNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -25,27 +25,21 @@ public class AlertService {
 
     private final Clock clock;
     private final AlertRepository alertRepository;
+    private final ApplicationEventPublisher publisher;
 
-    public void processEvent(Alert alert) {
-        Instant now = Instant.now(clock);
-
-        if (!alert.canRetry() && !alert.isFailed()) {
-            alert.failed(now);
-        }
-        if (alert.getRule().getSeverity() == Severity.CRITICAL) {
-            alert.getRule().setMaxRetries(5);
-        }
-
-        if (alert.getEvent().getType() == EventType.RECOVERY) {
-            alert.resolve(now);
-        }
-    }
 
     public void saveAlert(Alert alert) {
-        alertRepository.saveAlert(alert);
+
+        Alert saved = alertRepository.saveAlert(alert);
+        publisher.publishEvent(
+                saved
+        );
     }
 
     public void updateAlert(Alert alert) {
+        publisher.publishEvent(
+                alert
+        );
         alertRepository.updateAlert(alert);
     }
 
@@ -61,6 +55,12 @@ public class AlertService {
                 ));
     }
 
+    @Transactional
+    public void switchToAcknowledged(Long id) {
+        alertRepository.acknowledge(id);
+        log.info("Acknowledged alert: id={}", id);
+    }
+
     public Alert getAlert(Long id) {
         return alertRepository.getAlert(id).orElseThrow(() -> new AlertNotFoundException("Not found alert with id: " + id));
     }
@@ -70,11 +70,27 @@ public class AlertService {
     }
 
     public void deleteAlert(Long id) {
-        if(!alertRepository.existsById(id)){
+        if (!alertRepository.existsById(id)) {
             throw new AlertNotFoundException("Not found alert with id: " + id);
         }
         alertRepository.deleteAlert(id);
         log.info("Deleted alert: id={}", id);
     }
 
+    @Transactional
+    public void processRetries() {
+
+        List<Alert> alerts = alertRepository.findRetryableAlerts();
+
+        for (Alert alert : alerts) {
+            try {
+                publisher.publishEvent(alert);
+                alert.retry(Instant.now(clock));
+                alertRepository.saveAlert(alert);
+            } catch (Exception e) {
+                System.out.println("Exception123");
+            }
+        }
+
+    }
 }

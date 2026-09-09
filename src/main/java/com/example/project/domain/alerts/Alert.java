@@ -3,12 +3,13 @@ package com.example.project.domain.alerts;
 import com.example.project.domain.events.Event;
 import com.example.project.domain.rules.AlertRule;
 import com.example.project.domain.rules.Severity;
-import com.example.project.exceptions.UnsuitableStatusException;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Instant;
 
 @Getter
+@Setter
 public class Alert {
 
     private Long id;
@@ -58,14 +59,6 @@ public class Alert {
         this.lastTriggeredAt = lastTriggeredAt;
     }
 
-    public void activate(Instant now) {
-        if (status == AlertStatus.NEW) {
-            status = AlertStatus.ACTIVATED;
-            touch(now);
-        } else {
-            throw new UnsuitableStatusException("Cannot activate alert from " + status);
-        }
-    }
 
     public static Alert create(AlertRule rule, Event event, Instant now) {
         Alert alert = new Alert(rule, event, rule.getDescription(), rule.getSeverity(), 0, now);
@@ -78,25 +71,11 @@ public class Alert {
         touch(now);
     }
 
-    public void acknowledged(Instant now) {
-        if (status == AlertStatus.ACTIVATED) {
-            status = AlertStatus.ACKNOWLEDGED;
-            touch(now);
-        } else {
-            throw new UnsuitableStatusException("Cannot acknowledge alert from " + status);
-        }
-    }
-
-    public void resolve(Instant now) {
-        if (status == AlertStatus.ACTIVATED || status == AlertStatus.ACKNOWLEDGED) {
-            status = AlertStatus.RESOLVED;
-            touch(now);
-        } else {
-            throw new UnsuitableStatusException("Cannot resolve alert from " + status);
-        }
-    }
 
     public void retry(Instant now) {
+        if (status == AlertStatus.FAILED) {
+            return;
+        }
         retryCount++;
         if (!canRetry()) {
             failed(now);
@@ -113,20 +92,8 @@ public class Alert {
         return rule.isInCooldown(lastTriggeredAt, now);
     }
 
-    public boolean isFailed() {
-        return status == AlertStatus.FAILED;
-    }
-
     private void touch(Instant now) {
         updatedAt = now;
-    }
-
-    public void setLastTriggeredAt(Instant lastTriggeredAt) {
-        this.lastTriggeredAt = lastTriggeredAt;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
 

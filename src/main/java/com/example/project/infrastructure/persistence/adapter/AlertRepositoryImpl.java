@@ -34,9 +34,22 @@ public class AlertRepositoryImpl implements AlertRepository {
 
 
     @Override
-    public void saveAlert(Alert alert) {
+    public void acknowledge(Long id) {
+        jpaRepository.acknowledge(id);
+    }
+
+    @Override
+    public Alert saveAlert(Alert alert) {
         AlertEntity entity = mapWithResolvedRelations(alert);
-        jpaRepository.save(entity);
+        return alertMapper.toDomain(jpaRepository.save(entity));
+    }
+
+    @Override
+    public List<Alert> findRetryableAlerts() {
+        return jpaRepository.findRetryableAlerts()
+                .stream()
+                .map(alertMapper::toDomain)
+                .toList();
     }
 
     @Override

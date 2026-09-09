@@ -2,8 +2,8 @@ package com.example.project.infrastructure.persistence.jpa;
 
 import com.example.project.domain.alerts.AlertStatus;
 import com.example.project.infrastructure.persistence.AlertEntity;
-import com.example.project.infrastructure.persistence.AlertRuleEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -39,4 +39,18 @@ public interface AlertEntityRepository extends JpaRepository<AlertEntity, Long> 
        and a.status = :status
        """)
     List<AlertEntity> findActiveByRuleIds(@Param("ruleIds") Collection<Long> ruleIds, @Param("status") AlertStatus status);
+
+    @Modifying
+    @Query("""
+    update AlertEntity a
+    set a.status = 'ACKNOWLEDGED'
+    where a.id = :id
+""")
+    void acknowledge(@Param("id") Long id);
+
+    @Query("""
+        select a from AlertEntity a
+        where a.status = 'ACTIVATED'
+        """)
+    List<AlertEntity> findRetryableAlerts();
 }

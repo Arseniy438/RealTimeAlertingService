@@ -9,7 +9,9 @@ import java.util.Optional;
 
 public interface AlertRepository {
 
-    void saveAlert(Alert alert);
+    void acknowledge(Long id);
+
+    Alert saveAlert(Alert alert);
 
     void updateAlert(Alert alert);
 
@@ -24,4 +26,6 @@ public interface AlertRepository {
     List<Alert> getAllAlert();
 
     boolean existsById(Long id);
+
+    List<Alert> findRetryableAlerts();
 }
